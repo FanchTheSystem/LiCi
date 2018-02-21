@@ -1,9 +1,14 @@
 pipeline {
-    /* Run run in docker to mount Target ... */
-    agent any
+     agent {
+        dockerfile {
+            filename "copy.dockerfile"
+            args '--volume /home/jenkins/public_html:/home/jenkins/public_html'
+           /* '--volume /home/jenkins/cache/npm:/home/jenkins/.npm/_cacache' */
+        }
+    }
 
     environment {
-        Target = "/home/jenkins/deployed"
+        Target = "/home/jenkins/public_html"
     }
 
     options {
@@ -27,9 +32,10 @@ pipeline {
             steps {
                 sh "ls -lrt package"
                 sh "cd package && chmod 755 ./deploy_archive.sh && ./deploy_archive.sh"
-
             }
         }
+
+        /* Todo add a step to handle database */
     }
     post {
         always {
