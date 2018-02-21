@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    stages {
+        stage ('Stop') {
+            steps {
+                sh 'for i in $(docker container ls -q); do docker container stop $i; docker container rm $i done'
+                sh 'docker network rm ci.network || echo ok'
+            }
+        }
+
+        stage ('Purge') {
+            steps {
+                sh 'docker network prune -f || echo ok'
+                sh 'docker system prune -a -f || echo ok'
+            }
+        }
+
+        stage ('Start') {
+            steps {
+                sh 'docker network create ci.network'
+                sh 'docker run -d -p 5601:5601 -p 9200:9200 -p 5044:5044 --network=ci.network   --name elk.host sebp/elk:611'
+                /* sh 'docker run -d -p 9001:9000  --name portainer.host -v /var/run/docker.sock:/var/run/docker.sock -v /opt/portainer:/data portainer/portainer' */
+                sh 'docker run -d --network=ci.network --name postgres.host -e POSTGRES_PASSWORD=postgres24  postgres:9.4-alpine'
+                /* sh 'docker run -d -p 4444:4444  --network=ci.network --name selenium.host -v /dev/shm:/dev/shm -e SE_OPTS="-debug -enablePassThrough false" selenium/standalone-firefox:3.7.0' */
+            }
+        }
+
+        stage ('Inspect') {
+            steps {
+                sh 'docker images'
+                sh 'docker container ls'
+                sh 'docker network ls --no-trunc'
+                sh 'docker network inspect ci.network'
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+         }
+    }
+}
