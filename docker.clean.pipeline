@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage ('Stop') {
             steps {
-                sh 'for i in $(docker container ls -q); do docker container stop $i; docker container rm $i done'
+                sh 'for i in $(docker container ls -q); do docker container stop $i; docker container rm $i; done'
                 sh 'docker network rm ci.network || echo ok'
             }
         }
@@ -45,6 +45,6 @@ pipeline {
     post {
         always {
             cleanWs()
-         }
+        }
     }
 }

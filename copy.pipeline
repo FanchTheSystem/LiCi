@@ -17,9 +17,9 @@ pipeline {
             steps {
                 script {
                     step ([$class: 'CopyArtifact',
-                    projectName: 'Full Platform',
-                    filter: "package/*",
-                    target: './']);
+                           projectName: 'Full Platform',
+                           filter: "package/*",
+                           target: './']);
                 }
             }
         }
@@ -31,7 +31,7 @@ pipeline {
             }
         }
     }
-     post {
+    post {
         always {
             cleanWs()
 
