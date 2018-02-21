@@ -1,0 +1,40 @@
+pipeline {
+    /* Run run in docker to mount Target ... */
+    agent any
+
+    environment {
+        Target = "/home/jenkins/deployed"
+    }
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    stages {
+        stage('Copy Archive') {
+            steps {
+                script {
+                    step ([$class: 'CopyArtifact',
+                    projectName: 'Full Platform',
+                    filter: "package/*",
+                    target: './']);
+                }
+            }
+        }
+        stage ('Deploy') {
+            steps {
+                sh "ls -lrt package"
+                sh "cd package && chmod 755 ./deploy_archive.sh && ./deploy_archive.sh"
+
+            }
+        }
+    }
+     post {
+        always {
+            cleanWs()
+
+        }
+    }
+}
