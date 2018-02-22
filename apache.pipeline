@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        apachePort = sh(returnStdout: true, script: "echo 80${params.phpVer} | sed -e s/'\.'//g").trim()
+        apachePort = sh(returnStdout: true, script: "echo 80${params.phpVer} | sed -e s/'\\.'//g").trim()
      }
 
     options {
