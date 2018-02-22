@@ -37,5 +37,9 @@ RUN useradd -d $HOME -g $GROUP -u ${UID} -m $USER \
 
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-RUN service apache2 restart
-# TODO check docker service and swarm mode
+
+EXPOSE 80
+CMD /usr/sbin/service apache2 restart && /bin/bash
+
+# warning it keep running because /bin/bash does not exit
+# to clean exit container "docker attach tst-cnt" and type "exit"
