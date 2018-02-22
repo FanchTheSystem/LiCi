@@ -16,6 +16,12 @@ pipeline {
     }
 
     stages {
+        stage ('Prepare') {
+            steps {
+                sh "mkdir -p /home/jenkins/public_html"
+            }
+        }
+
         stage ('Stop') {
             steps {
                 sh "docker container stop apache-cnt-${params.phpVer} || echo ok"
