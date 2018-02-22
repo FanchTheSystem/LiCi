@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -ex
 
-cd package
 
-sha256sum -c ./sha256.to.deploy
 
-if [ -f ./env.to.deploy ]
+sha256sum -c package/sha256.to.deploy
+
+if [ -f package/env.to.deploy ]
 then
-    source ./env.to.deploy
+    source package/env.to.deploy
 else
     echo "env.to.deploy is missing"
     exit 42
