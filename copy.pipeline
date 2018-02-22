@@ -3,7 +3,6 @@ pipeline {
         dockerfile {
             filename "copy.dockerfile"
             args '--volume /home/jenkins/public_html:/home/jenkins/public_html'
-           /* '--volume /home/jenkins/cache/npm:/home/jenkins/.npm/_cacache' */
         }
     }
 
