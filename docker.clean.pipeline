@@ -20,7 +20,6 @@ pipeline {
                 sh 'docker network prune -f || echo ok'
                 sh 'docker system prune -a -f || echo ok'
                 /* it look like system prune do not remove all (at least volume are still here */
-                sh 'docker images purge -f  || echo ok'
                 sh 'docker volume prune -f || echo ok'
             }
         }
