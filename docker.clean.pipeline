@@ -11,7 +11,6 @@ pipeline {
         stage ('Stop') {
             steps {
                 sh 'for i in $(docker container ls -q); do docker container stop $i; docker container rm -v $i; done'
-                sh 'docker network rm ci.network'
             }
         }
 
