@@ -20,11 +20,7 @@ RUN echo "deb http://ftp.debian.org/debian $(lsb_release -sc)-backports main" >>
 
 RUN a2enmod userdir && a2enmod rewrite && a2dismod mpm_event && a2enmod mpm_prefork && a2enmod php${PHPVER}
 
-RUN echo "phar.readonly = Off" >> /etc/php/${PHPVER}/cli/conf.d/42-phar-readonly.ini \
-    && echo "memory_limit=-1" >> /etc/php/${PHPVER}/cli/conf.d/42-memory-limit.ini
-
-RUN echo "phar.readonly = Off" >> /etc/php/${PHPVER}/apache2/conf.d/42-phar-readonly.ini \
-    && echo "memory_limit=-1" >> /etc/php/${PHPVER}/apache2/conf.d/42-memory-limit.ini
+RUN echo "memory_limit=-1" >> /etc/php/${PHPVER}/apache2/conf.d/42-memory-limit.ini
 
 ENV HOME=/home/jenkins
 ENV USER=jenkins
