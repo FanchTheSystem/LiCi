@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        apachePort = sh(returnStdout: true, script: "echo 80${params.phpVer} | sed -e s/\\.//g").trim()
+        apachePort = sh(returnStdout: true, script: "echo 80${params.phpVer} | sed -e s/'\.'//g").trim()
      }
 
     options {
@@ -31,7 +31,7 @@ pipeline {
 
         stage ('Run') {
             steps {
-                sh "docker run -dit -p ${apachePort}:80 --volume /home/jenkins/public_html:/home/jenkins/public_html --name apache-cnt-${params.phpVer} apache-img-${params.phpVer}"
+                sh "docker run -dit -p ${env.apachePort}:80 --volume /home/jenkins/public_html:/home/jenkins/public_html --name apache-cnt-${params.phpVer} apache-img-${params.phpVer}"
             }
         }
     }
