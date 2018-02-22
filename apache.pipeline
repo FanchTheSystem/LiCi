@@ -25,7 +25,7 @@ pipeline {
 
         stage ('Build') {
             steps {
-                sh "docker build --build-arg PHPVER=$${params.phpVer} -t apache-img-${params.phpVer} -f apache.dockerfile ."
+                sh "docker build --build-arg PHPVER=${params.phpVer} -t apache-img-${params.phpVer} -f apache.dockerfile ."
             }
         }
 
