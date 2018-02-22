@@ -5,7 +5,9 @@ FROM debian:stable
 
 RUN apt-get update && apt-get install --no-install-recommends -y apt-transport-https lsb-release ca-certificates net-tools lsof postgresql-client wget \
     && apt-get autoremove -y && apt-get clean
-# for full only && default-jre-headless xvfb firefox-esr dnsutils vim
+
+RUN apt-get install --no-install-recommends -y vim-nox \
+    && apt-get autoremove -y && apt-get clean
 
 
 ARG PHPVER=7.1
@@ -33,6 +35,8 @@ RUN useradd -d $HOME -g $GROUP -u ${UID} -m $USER \
 
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+# Ah Ah debian security : install everything, hide config to user and disable everything ...
+RUN sed -i -e s/'php_admin_flag engine Off'/'php_admin_flag engine On'/g /etc/apache2/mods-enabled/php7.1.conf
 
 EXPOSE 80
 CMD /usr/sbin/service apache2 restart && /bin/bash
