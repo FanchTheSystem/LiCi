@@ -27,7 +27,7 @@ fi
 # Todo, check if dir already exist or use a deploy tools
 rm -rf ${Target}/${Tag}
 mkdir -p ${Target}/${Tag}
-cp ${Filename} ${Target}/${Tag}
+cp package/${Filename} ${Target}/${Tag}
 cd ${Target}/${Tag}
 pwd
 tar -xf ${Filename}
