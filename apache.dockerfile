@@ -36,7 +36,7 @@ RUN useradd -d $HOME -g $GROUP -u ${UID} -m $USER \
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # Ah Ah debian security : install everything, hide config to user and disable everything ...
-RUN sed -i -e s/'php_admin_flag engine Off'/'php_admin_flag engine On'/g /etc/apache2/mods-enabled/php7.1.conf
+RUN sed -i -e s/'php_admin_flag engine Off'/'php_admin_flag engine On'/g /etc/apache2/mods-enabled/php${PHPVER}.conf
 
 EXPOSE 80
 CMD /usr/sbin/service apache2 restart && /bin/bash
