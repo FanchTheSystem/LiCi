@@ -11,16 +11,16 @@ pipeline {
         stage ('Stop') {
             steps {
                 sh 'for i in $(docker container ls -q); do docker container stop $i; docker container rm -v $i; done'
-                sh 'docker network rm ci.network || echo ok'
+                sh 'docker network rm ci.network'
             }
         }
 
         stage ('Purge') {
             steps {
-                sh 'docker network prune -f || echo ok'
-                sh 'docker system prune -a -f || echo ok'
+                sh 'docker network prune -f'
+                sh 'docker system prune -a -f'
                 /* it look like system prune do not remove all (at least volume are still here */
-                sh 'docker volume prune -f || echo ok'
+                sh 'docker volume prune -f'
             }
         }
 
