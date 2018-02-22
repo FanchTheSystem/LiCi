@@ -1,6 +1,14 @@
 pipeline {
     agent any
 
+    parameters {
+        string(defaultValue: '7.1', description: 'Version of Php', name: 'phpVer')
+    }
+
+    environment {
+        apachePort = sh(returnStdout: true, script: "echo 80${params.phpVer} | sed -e s/\\.//g").trim()
+     }
+
     options {
         timeout(time: 1, unit: 'HOURS')
         timestamps()
@@ -10,20 +18,20 @@ pipeline {
     stages {
         stage ('Stop') {
             steps {
-                sh "docker container stop apache-cnt || echo ok"
-                sh "docker container rm apache-cnt || echo ok"
+                sh "docker container stop apache-cnt-${params.phpVer} || echo ok"
+                sh "docker container rm apache-cnt-${params.phpVer} || echo ok"
             }
         }
 
         stage ('Build') {
             steps {
-                sh "docker build -t apache-img -f apache.dockerfile . || echo ok"
+                sh "docker build --build-arg PHPVER=$${params.phpVer} -t apache-img-${params.phpVer} -f apache.dockerfile ."
             }
         }
 
         stage ('Run') {
             steps {
-                sh "docker run -dit -p 80:80 --volume /home/jenkins/public_html:/home/jenkins/public_html --name apache-cnt apache-img"
+                sh "docker run -dit -p ${apachePort}:80 --volume /home/jenkins/public_html:/home/jenkins/public_html --name apache-cnt-${params.phpVer} apache-img-${params.phpVer}"
             }
         }
     }
