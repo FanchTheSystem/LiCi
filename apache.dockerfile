@@ -41,7 +41,7 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # Ah Ah debian security : install everything, hide config to user and disable everything ...
 RUN sed -i -e s/'php_admin_flag engine Off'/'php_admin_flag engine On'/g /etc/apache2/mods-enabled/php${PHPVER}.conf
 
-COPY apache-config.conf /etc/apache2/sites-enabled/000-default.conf
+COPY apache-config.conf /etc/apache2/sites-enabled/042-example.conf
 
 EXPOSE 80
 CMD /usr/sbin/service apache2 restart && /bin/bash
