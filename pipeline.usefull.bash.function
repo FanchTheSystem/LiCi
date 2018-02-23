@@ -1,0 +1,30 @@
+#### Example:
+
+# $> source pipeline.usefull.bash.function
+# $> run_pipeline_sh docker.clean.pipeline
+# $> show_pipeline_sh apache.pipeline # this pipeline use some variable
+# $> phpVer=7.1
+# $> apachePort=8071
+# $> get_pipeline_sh apache.pipeline # Dry Run
+# $> run_pipeline_sh apache.pipeline
+
+show_pipeline_sh () {
+    if [ -f $1 ]
+    then
+        cat $1 | grep -e '^\s\+sh' | sed -e s/'sh '/'echo '/ -e s/'params\.'//g -e s/'env\.'//g
+    fi
+}
+
+get_pipeline_sh () {
+    if [ -f $1 ]
+    then
+        show_pipeline_sh $1 | /bin/bash
+    fi
+}
+
+run_pipeline_sh () {
+    if [ -f $1 ]
+    then
+        get_pipeline_sh $1 | /bin/bash
+    fi
+}
