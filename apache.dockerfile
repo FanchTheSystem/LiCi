@@ -21,9 +21,11 @@ RUN echo "deb http://ftp.debian.org/debian $(lsb_release -sc)-backports main" >>
     && if [ ! '7.2' = $PHPVER ]; then apt-get install --no-install-recommends -y php${PHPVER}-mcrypt; fi \
     && apt-get autoremove -y && apt-get clean
 
-RUN a2enmod userdir && a2enmod rewrite && a2dismod mpm_event && a2enmod mpm_prefork && a2enmod php${PHPVER}
+RUN a2enmod rewrite && a2dismod mpm_event && a2enmod mpm_prefork && a2enmod php${PHPVER}
+#a2enmod userdir &&
 
-RUN echo "memory_limit=-1" >> /etc/php/${PHPVER}/apache2/conf.d/42-memory-limit.ini
+RUN echo "memory_limit=-1" >> /etc/php/${PHPVER}/apache2/conf.d/42-memory-limit.ini \
+    && echo "memory_limit=-1" >> /etc/php/${PHPVER}/cli/conf.d/42-memory-limit.ini
 
 ENV HOME=/home/jenkins
 ENV USER=jenkins
@@ -38,6 +40,8 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # Ah Ah debian security : install everything, hide config to user and disable everything ...
 RUN sed -i -e s/'php_admin_flag engine Off'/'php_admin_flag engine On'/g /etc/apache2/mods-enabled/php${PHPVER}.conf
+
+COPY apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
 EXPOSE 80
 CMD /usr/sbin/service apache2 restart && /bin/bash
