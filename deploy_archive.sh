@@ -3,31 +3,52 @@ set -ex
 
 
 
-sha256sum -c package/sha256.to.deploy
+sha256sum -c *.sha256
 
-if [ -f package/env.to.deploy ]
-then
-    source package/env.to.deploy
-else
-    echo "env.to.deploy is missing"
-    exit 42
-fi
 
 if [ -z ${Target} ]
 then
     Target=/tmp
 fi
 
+workDir=/tmp/work
+
+
+mkdir ${workDir}
+cp ${Filename} ${workDir}/
+cd ${workDir}
+tar -xf ${Filename}
+
 if [ -z ${Tag} ]
 then
-    Tag=0.0.0
+    Tag=$(cat Tag.txt)
 fi
 
+if [ -z ${Version} ]
+then
+    Version=$(cat Version.txt)
+fi
+
+cd -
+
+if [ ${Version} = ${Tag} ]
+then
+    Target=${Target}/${Tag}
+else
+    Target=${Target}/$(echo ${Version}|sed -e s/${Tag}/Dev/g)
+fi
 
 # Todo, check if dir already exist or use a deploy tools
-rm -rf ${Target}/${Tag}
-mkdir -p ${Target}/${Tag}
-cp package/${Filename} ${Target}/${Tag}
-cd ${Target}/${Tag}
-pwd
-tar -xf ${Filename}
+if [ -d ${Target} ]
+then
+    mv ${Target} ${Target}$(date +'%Y%m%d%H%M%S')
+fi
+
+mv ${workDir} ${Target}
+chmod -R 755 ${Target}
+
+
+#mkdir -p ${Target}/${Tag}
+#cp ${Filename} ${Target}/${Tag}
+#cd ${Target}/${Tag}
+#pwd

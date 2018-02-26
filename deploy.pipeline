@@ -1,5 +1,5 @@
 pipeline {
-   agent any
+    agent any
 
     parameters {
         string(defaultValue: '7.1', description: 'Version of Php', name: 'phpVer')
@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         apachePort = sh(returnStdout: true, script: "echo 80${params.phpVer} | sed -e s/'\\.'//g").trim()
-        Target = "/home/jenkins/public_html"
+        Target = "/home/jenkins/public_html/"
     }
 
     options {
@@ -19,19 +19,17 @@ pipeline {
     stages {
 
         stage ('Check') {
-           steps {
-                 sh "docker exec -u root -it apache-cnt-${params.phpVer} service apache2 status"
-            /*docker exec -u jenkins -it -w /home/jenkins/public_html/0.4.3/ apache-cnt-${params.phpVer} ./bin/console cache:clear --env=prod */
-}
+            steps {
+                sh "docker exec -u root -it apache-cnt-${params.phpVer} service apache2 status"
+                /*docker exec -u jenkins -it -w /home/jenkins/public_html/0.4.3/ apache-cnt-${params.phpVer} ./bin/console cache:clear --env=prod */
+           }
         }
-
-        /*
         stage ('Deploy') {
             steps {
-                sh "./deploy_archive.sh && ./deploy_archive.sh"
+                sh "./deploy_archive.sh"
             }
         }
-
+        /*
         stage ('Database') {
             steps {
                 sh 'psql -w -h ${DBHOST} -c  "update sil_ecommerce_channel set hostname='sandboxrd.libre-informatique.fr';" -U ${DBROOTUSER} -d ${DBAPPNAME}'
