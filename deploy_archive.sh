@@ -2,8 +2,7 @@
 set -ex
 
 Name=Platform
-workDir=/tmp/work
-mkdir ${workDir}
+workDir=$(mktemp) #mkdir ${workDir}
 cd ${workDir}
 workDir=$(pwd) #if previous workDir was a relative or symbolic path
 if [ -z ${Target} ]
