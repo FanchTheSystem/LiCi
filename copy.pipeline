@@ -28,7 +28,7 @@ pipeline {
                 script {
                     step ([$class: 'CopyArtifact',
                            projectName: 'Full Platform',
-                           filter: "package/*",
+                           filter: "*",
                            target: "${env.Repo}"]);
                 }
             }
