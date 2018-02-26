@@ -22,27 +22,28 @@ pipeline {
                 sh "mkdir -p ${env.Repo}"
             }
         }
-
-        stage('Copy Archive') {
-            steps {
-                script {
-                    step ([$class: 'CopyArtifact',
-                           projectName: 'Full Platform',
-                           filter: "*",
-                           target: "${env.Repo}/Platform"]);
+        parallel {
+            stage('Copy Platform') {
+                steps {
+                    script {
+                        step ([$class: 'CopyArtifact',
+                               projectName: 'Full Platform',
+                               filter: "*",
+                               target: "${env.Repo}/Platform"]);
+                    }
                 }
             }
-
-            steps {
-                script {
-                    step ([$class: 'CopyArtifact',
-                           projectName: 'E-venement',
-                           filter: "*",
-                           target: "${env.Repo}/Eve"]);
+            stage('Copy Eve') {
+                steps {
+                    script {
+                        step ([$class: 'CopyArtifact',
+                               projectName: 'E-venement',
+                               filter: "*",
+                               target: "${env.Repo}/Eve"]);
+                    }
                 }
             }
         }
-
         stage ('Clean') {
             steps {
                 sh "ls -t | head -n3 # add a rm for file not in list"
