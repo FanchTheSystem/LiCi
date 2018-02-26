@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        Repo = "/home/jenkins/public_html/repo/Platform"
+        Target = "/home/jenkins/public_html"
     }
 
     options {
@@ -17,28 +17,25 @@ pipeline {
     }
 
     stages {
-        stage ('Prepare') {
+        stage ('Deploy') {
             steps {
-                sh "mkdir -p ${env.Repo}"
+                sh "./deploy_archive.sh && ./deploy_archive.sh"
             }
         }
 
-        stage('Copy Archive') {
+        stage ('Database') {
             steps {
-                script {
-                    step ([$class: 'CopyArtifact',
-                           projectName: 'Full Platform',
-                           filter: "package/*",
-                           target: "${env.Repo}"]);
-                }
+                sh 'psql -w -h ${DBHOST} -c  "update sil_ecommerce_channel set hostname='sandboxrd.libre-informatique.fr';" -U ${DBROOTUSER} -d ${DBAPPNAME}'
             }
         }
 
-        stage ('Clean') {
+        stage ('Cache Clear') {
             steps {
-                sh "ls -t | head -n3 # add a rm for file not in list"
+                sh "bin/console cache:clear --env=prod"
             }
         }
+
+        /* Todo add a step to handle database */
     }
     post {
         always {
