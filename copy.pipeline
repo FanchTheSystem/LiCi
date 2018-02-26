@@ -22,24 +22,26 @@ pipeline {
                 sh "mkdir -p ${env.Repo}"
             }
         }
-        parallel {
-            stage('Copy Platform') {
-                steps {
-                    script {
-                        step ([$class: 'CopyArtifact',
-                               projectName: 'Full Platform',
+        stage ('Copy') {
+            parallel {
+                stage('Copy Platform') {
+                    steps {
+                        script {
+                            step ([$class: 'CopyArtifact',
+                                   projectName: 'Full Platform',
                                filter: "*",
-                               target: "${env.Repo}/Platform"]);
+                                   target: "${env.Repo}/Platform"]);
+                        }
                     }
                 }
-            }
-            stage('Copy Eve') {
-                steps {
-                    script {
-                        step ([$class: 'CopyArtifact',
-                               projectName: 'E-venement',
-                               filter: "*",
-                               target: "${env.Repo}/Eve"]);
+                stage('Copy Eve') {
+                    steps {
+                        script {
+                            step ([$class: 'CopyArtifact',
+                                   projectName: 'E-venement',
+                                   filter: "*",
+                                   target: "${env.Repo}/Eve"]);
+                        }
                     }
                 }
             }
