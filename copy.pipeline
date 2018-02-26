@@ -1,10 +1,5 @@
 pipeline {
-     agent {
-        dockerfile {
-            filename "copy.dockerfile"
-            args '--volume /home/jenkins/public_html:/home/jenkins/public_html'
-        }
-    }
+    agent any
 
     environment {
         Repo = "/home/jenkins/public_html/repo"
@@ -29,7 +24,7 @@ pipeline {
                         script {
                             step ([$class: 'CopyArtifact',
                                    projectName: 'Full Platform',
-                               filter: "*",
+                                   filter: "*",
                                    target: "${env.Repo}/Platform"]);
                         }
                     }
@@ -48,7 +43,7 @@ pipeline {
         }
         stage ('Clean') {
             steps {
-                sh "ls -t | head -n3 # add a rm for file not in list"
+                sh "ls -t ${env.Repo}| head -n3 # add a rm for file not in list"
             }
         }
     }
