@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        Repo = "/home/jenkins/public_html/repo/Platform"
+        Repo = "/home/jenkins/public_html/repo"
     }
 
     options {
@@ -29,7 +29,16 @@ pipeline {
                     step ([$class: 'CopyArtifact',
                            projectName: 'Full Platform',
                            filter: "*",
-                           target: "${env.Repo}"]);
+                           target: "${env.Repo}/Platform"]);
+                }
+            }
+
+            steps {
+                script {
+                    step ([$class: 'CopyArtifact',
+                           projectName: 'E-venement',
+                           filter: "*",
+                           target: "${env.Repo}/Eve"]);
                 }
             }
         }
