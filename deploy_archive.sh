@@ -17,7 +17,7 @@ then
 fi
 cd ${Source}
 Source=$(pwd) #if previous workDir was a relative or symbolic path
-Finename=$(cat ${Name}_Latest.txt)
+Filename=$(cat ${Name}_Latest.txt)
 sha256sum -c ${Name}_Latest.sha256
 
 cp ${Source}/${Filename} ${workDir}/
