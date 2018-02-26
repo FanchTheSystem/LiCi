@@ -1,12 +1,12 @@
 pipeline {
-     agent {
-        dockerfile {
-            filename "copy.dockerfile"
-            args '--volume /home/jenkins/public_html:/home/jenkins/public_html'
-        }
+   agent any
+
+    parameters {
+        string(defaultValue: '7.1', description: 'Version of Php', name: 'phpVer')
     }
 
     environment {
+        apachePort = sh(returnStdout: true, script: "echo 80${params.phpVer} | sed -e s/'\\.'//g").trim()
         Target = "/home/jenkins/public_html"
     }
 
@@ -17,6 +17,14 @@ pipeline {
     }
 
     stages {
+
+        stage ('Check') {
+            sh "docker exec -u root -it -w  apache-cnt-${params.phpVer} service apache2 status"
+            /*docker exec -u jenkins -it -w /home/jenkins/public_html/0.4.3/ apache-cnt-${params.phpVer} ./bin/console cache:clear --env=prod */
+
+        }
+
+        /*
         stage ('Deploy') {
             steps {
                 sh "./deploy_archive.sh && ./deploy_archive.sh"
@@ -34,7 +42,7 @@ pipeline {
                 sh "bin/console cache:clear --env=prod"
             }
         }
-
+        */
         /* Todo add a step to handle database */
     }
     post {
