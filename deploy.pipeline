@@ -20,7 +20,7 @@ pipeline {
 
         stage ('Check') {
            steps {
-                 sh "docker exec -u root -it -w  apache-cnt-${params.phpVer} service apache2 status"
+                 sh "docker exec -u root -it apache-cnt-${params.phpVer} service apache2 status"
             /*docker exec -u jenkins -it -w /home/jenkins/public_html/0.4.3/ apache-cnt-${params.phpVer} ./bin/console cache:clear --env=prod */
 }
         }
