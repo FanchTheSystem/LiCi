@@ -1,8 +1,12 @@
 pipeline {
     agent any
 
-    environment {
-        Repo = "/home/jenkins/public_html/repo"
+    parameters {
+        string(defaultValue: 'Full Platform', description: 'Job Name', name: 'Job')
+        string(defaultValue: 'Platform', description: 'Project Name', name: 'Project')
+        string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
+        string(defaultValue: '/home/jenkins/public_html/repo', description: 'Repository Directory', name: 'Repo')
+
     }
 
     options {
@@ -14,7 +18,7 @@ pipeline {
     stages {
         stage ('Prepare') {
             steps {
-                sh "mkdir -p ${env.Repo}"
+                sh "mkdir -p ${params.Repo}"
             }
         }
         stage ('Copy') {
@@ -23,34 +27,24 @@ pipeline {
                     steps {
                         script {
                             step ([$class: 'CopyArtifact',
-                                   projectName: 'Full Platform',
+                                   projectName: "${params.Job}/${params.Branch}",
                                    filter: "*",
-                                   target: "${env.Repo}/Platform"]);
+                                   target: "${params.Repo}/${params.Project}"]);
                         }
                     }
                 }
-                stage('Copy Eve') {
-                    steps {
-                        script {
-                            step ([$class: 'CopyArtifact',
-                                   projectName: 'E-venement',
-                                   filter: "*",
-                                   target: "${env.Repo}/Eve"]);
-                        }
-                    }
-                }
+
             }
         }
         stage ('Clean') {
             steps {
-                sh "ls -t ${env.Repo}| head -n3 # add a rm for file not in list"
+                sh "ls -t ${params.Repo}| head -n3 # add a rm for file not in list"
             }
         }
     }
     post {
         always {
             cleanWs()
-
         }
     }
 }
