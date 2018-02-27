@@ -17,8 +17,12 @@ then
 fi
 cd ${Source}
 Source=$(pwd) #if previous workDir was a relative or symbolic path
-Filename=$(cat ${Name}_Latest.txt)
-sha256sum -c ${Name}_Latest.sha256
+if [ -z ${Filename} ]
+then
+    Filename=${Name}_master.tar.gz
+fi
+
+sha256sum -c ${Filename}.sha256.txt
 
 cp ${Source}/${Filename} ${workDir}/
 
