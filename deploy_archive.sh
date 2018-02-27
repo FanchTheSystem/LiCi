@@ -24,20 +24,13 @@ cp ${Source}/${Filename} ${workDir}/
 
 cd ${workDir}
 tar -xf ${Filename}
-if [ -z ${Tag} ]
+
+if [ -z ${Branch} ]
 then
-    Tag=$(cat Tag.txt)
+    Branch=$(cat Branch.txt)
 fi
-if [ -z ${Version} ]
-then
-    Version=$(cat Version.txt)
-fi
-if [ ${Version} = ${Tag} ]
-then
-    Target=${Target}/${Tag}
-else
-    Target=${Target}/$(echo ${Version}|sed -e s/${Tag}/Dev/g)
-fi
+Target=${Target}/${Branch}
+
 # Todo, check if dir already exist or use a deploy tools
 if [ -d ${Target} ]
 then
