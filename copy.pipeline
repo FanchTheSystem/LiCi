@@ -27,7 +27,7 @@ pipeline {
                     steps {
                         script {
                             step ([$class: 'CopyArtifact',
-                                   projectName: "${params.Job}/${params.Branch}",
+                                   projectName: "${params.Job}",
                                    filter: "*",
                                    target: "${params.Repo}/${params.Project}"]);
                         }
