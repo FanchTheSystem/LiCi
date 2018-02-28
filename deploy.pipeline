@@ -3,6 +3,9 @@ pipeline {
 
     parameters {
         string(defaultValue: '7.1', description: 'Version of Php', name: 'phpVer')
+        string(defaultValue: 'Platform', description: 'Project Name', name: 'Project')
+        string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
+        string(defaultValue: 'sandboxrd.libre-informatique.fr', description: 'Base Url', name: 'Hostname')
     }
 
     environment {
@@ -29,6 +32,7 @@ pipeline {
                 sh "./deploy_archive.sh"
             }
         }
+
         /*
         stage ('Database') {
             steps {
