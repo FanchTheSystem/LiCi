@@ -36,10 +36,10 @@ fi
 Target=${Target}/${Branch}
 
 # Todo, check if dir already exist or use a deploy tools
-if [ -d ${Target} ]
-then
-    mv ${Target} ${Target}$(date +'%Y%m%d%H%M%S')
-fi
-
-mv ${workDir} ${Target}
+#if [ -d ${Target} ]
+#then
+#    mv ${Target} ${Target}$(date +'%Y%m%d%H%M%S')
+#fi
+mkdir -p ${Target}
+cp -rp ${workDir}/* ${Target}/
 chmod -R 755 ${Target}
