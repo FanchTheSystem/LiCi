@@ -43,3 +43,16 @@ Target=${Target}/${Branch}
 mkdir -p ${Target}
 cp -rp ${workDir}/* ${Target}/
 chmod -R 755 ${Target}
+
+# TODO, should use etcd or other like that tool
+echo "
+DBHOST=postgres.host
+DBROOTUSER=postgres
+DBROOTPASSWORD=postgres24
+DBAPPNAME=sil_db_${Branch}
+DBAPPUSER=sil_user_${Branch}
+DBAPPPASSWORD=sil_password
+
+ELHOST=elk.host
+ELALIAS=sil_${Branch}
+" > ${Target}/.env
