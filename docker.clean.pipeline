@@ -33,10 +33,11 @@ pipeline {
             }
         }
 
-        stage ('Build Usefull')
-        {
-            sh 'wget https://raw.githubusercontent.com/sil-project/Platform/master/etc/dockerfile.build.jenkins'
-            sh 'docker build -t sil-platform-img -f dockerfile.build.jenkins .'
+        stage ('Build Usefull') {
+            steps {
+                sh 'wget https://raw.githubusercontent.com/sil-project/Platform/master/etc/dockerfile.build.jenkins'
+                sh 'docker build -t sil-platform-img -f dockerfile.build.jenkins .'
+            }
         }
 
         stage ('Inspect') {
