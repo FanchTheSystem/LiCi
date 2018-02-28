@@ -29,7 +29,7 @@ pipeline {
         }
         stage ('Deploy') {
             steps {
-                sh "./deploy_archive.sh"
+                sh "Branch=${params.Branch} Name=${params.Project} Url=${params.Hostname} ./deploy_archive.sh"
             }
         }
 
