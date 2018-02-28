@@ -24,7 +24,6 @@ pipeline {
         stage ('Check') {
             steps {
                 sh "docker exec -u root apache-cnt-${params.phpVer} service apache2 status"
-                /*docker exec -u jenkins -it -w /home/jenkins/public_html/0.4.3/ apache-cnt-${params.phpVer} ./bin/console cache:clear --env=prod */
            }
         }
         stage ('Deploy') {
@@ -32,7 +31,16 @@ pipeline {
                 sh "Branch=${params.Branch} Name=${params.Project} Url=${params.Hostname} ./deploy_archive.sh"
             }
         }
-
+        /* Todo should check if database exist in some kind of prod scripts*/
+    /*    stage ('Create Database') {
+            steps {
+                sh "docker exec -u jenkins -it -w /home/jenkins/public_html/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/set_db_host_test.sh"
+                sh "docker exec -u jenkins -it -w /home/jenkins/public_html/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/create_database_test.sh"
+                sh "docker exec -u jenkins -it -w /home/jenkins/public_html/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/install_db_test.sh"
+                #./bin/console cache:clear --env=prod
+           }
+        }
+*/
         /*
         stage ('Database') {
             steps {

@@ -72,6 +72,8 @@ CleanBranch=$(echo $Branch|sed -e s/-/_/g|tr '[:upper:]' '[:lower:]')
 # TODO, should use etcd or other like that tool
 echo "
 
+SERVERENV=prod
+
 DBHOST=postgres.host
 DBROOTUSER=postgres
 DBROOTPASSWORD=postgres24
