@@ -16,6 +16,14 @@ pipeline {
     }
 
     stages {
+        stage ('Param Check') {
+            steps {
+                sh "echo ${params.Job}"
+                sh "echo ${params.Project}"
+                sh "echo ${params.Branch}"
+                sh "echo ${params.Repo}"
+            }
+        }
         stage ('Prepare') {
             steps {
                 sh "mkdir -p ${params.Repo}"
