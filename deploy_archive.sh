@@ -67,17 +67,20 @@ then
     Url=127.0.0.1
 fi
 
+CleanBranch=$(echo $Branch|sed -e s/-/_/g|tr '[:upper:]' '[:lower:]')
+
 # TODO, should use etcd or other like that tool
 echo "
+
 DBHOST=postgres.host
 DBROOTUSER=postgres
 DBROOTPASSWORD=postgres24
-DBAPPNAME=sil_db_${Branch}
-DBAPPUSER=sil_user_${Branch}
+DBAPPNAME=sil_db_${CleanBranch}
+DBAPPUSER=sil_user_${CleanBranch}
 DBAPPPASSWORD=sil_password
 
 ELHOST=elk.host
-ELALIAS=sil_${Branch}
+ELALIAS=sil_${CleanBranch}
 
 CHANNELURL=${Url}
 " > ${Target}/.env
