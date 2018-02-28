@@ -89,3 +89,7 @@ CHANNELURL=${Url}
 
 
 cat ${Target}/.env
+
+
+# Cleaning
+rm -rf ${workDir}
