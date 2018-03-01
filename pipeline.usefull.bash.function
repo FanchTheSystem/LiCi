@@ -11,7 +11,7 @@
 show_pipeline_sh () {
     if [ -f $1 ]
     then
-        cat $1 | grep -e '^\s\+sh' | sed -e s/'sh '/'echo '/ -e s/'params\.'//g -e s/'env\.'//g
+        cat $1 | grep -e '^\s\+sh' | sed -e s/'sh '/'echo '/ -e s/'{params\.'//g -e s/'{env\.'//g
     fi
 }
 
