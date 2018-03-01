@@ -23,6 +23,7 @@ if [ -z ${Target} ]
 then
     Target=/tmp
 fi
+mkdir -p ${Target}
 cd ${Target}
 Target=$(pwd) #if previous workDir was a relative or symbolic path
 
