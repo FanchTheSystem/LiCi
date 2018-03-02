@@ -40,6 +40,13 @@ pipeline {
                 sh "docker run -dit -p ${env.apachePort}:80 --network=ci.network  --volume /home/jenkins/public_html:/home/jenkins/public_html --name apache-cnt-${params.phpVer} apache-img-${params.phpVer}"
             }
         }
+
+        stage ('Status') {
+            steps {
+                sh "docker exec -u root apache-cnt-${params.phpVer} service apache2 status"
+                sh "docker exec -u root apache-cnt-${params.phpVer} php --version"
+            }
+        }
     }
 
     post {
