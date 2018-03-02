@@ -20,10 +20,8 @@ ENV GROUP=users
 
 # Uid for system mount
 ARG UID=1004
-RUN useradd -d $HOME -g $GROUP -u ${UID} -m $USER \
-    && usermod -a -G www-data jenkins
+RUN useradd -d $HOME -g $GROUP -u ${UID} -m $USER
 
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-#EXPOSE 80
 CMD /bin/bash
