@@ -43,6 +43,7 @@ pipeline {
 
         stage ('Status') {
             steps {
+                sh "docker exec -u root apache-cnt-${params.phpVer} sleep 3 # wait apache restarting (in previous docker run)"
                 sh "docker exec -u root apache-cnt-${params.phpVer} service apache2 status"
                 sh "docker exec -u root apache-cnt-${params.phpVer} php --version"
             }
