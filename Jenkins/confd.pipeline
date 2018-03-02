@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(defaultValue: '0.15.0', description: 'Version of Confd', name: 'confdVer')
+    }
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    stages {
+        stage ('Stop') {
+            steps {
+                sh "docker container stop confd-cnt-${params.confdVer} || echo ok"
+                sh "docker container rm confd-cnt-${params.confdVer} || echo ok"
+            }
+        }
+
+        stage ('Build') {
+            steps {
+                sh "docker build --build-arg CONFDVER=${params.confdVer} -t confd-img-${params.confdVer} -f Docker/confd.dockerfile ."
+            }
+        }
+
+        stage ('Run') {
+            steps {
+                sh "docker run -dit --network=ci.network --name confd-cnt-${params.confdVer} confd-img-${params.confdVer}"
+            }
+        }
+
+        stage ('Status') {
+            steps {
+                sh "docker exec -u root confd-cnt-${params.confdVer} confd --version"
+            }
+        }
+
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
