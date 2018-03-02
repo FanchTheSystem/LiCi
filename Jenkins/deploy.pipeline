@@ -30,7 +30,7 @@ pipeline {
         /* Todo should have one step for deploy, one for env, and one for config */
         stage ('Deploy') {
             steps {
-                sh "Target=${env.Target} Branch=${params.Branch} Name=${params.Project} Url=${params.Hostname} ./deploy_archive.sh"
+                sh "Target=${env.Target} Branch=${params.Branch} Name=${params.Project} Url=${params.Hostname} ./Scripts/deploy_archive.sh"
             }
         }
         /* Todo should check if database exist in some kind of prod scripts*/
