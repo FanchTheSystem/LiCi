@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(defaultValue: '3.3.1', description: 'Version of Etcd', name: 'etcdVer')
+    }
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    stages {
+        stage ('Stop') {
+            steps {
+                sh "docker container stop etcd-cnt-${params.etcdVer} || echo ok"
+                sh "docker container rm etcd-cnt-${params.etcdVer} || echo ok"
+            }
+        }
+
+        stage ('Build') {
+            steps {
+                sh "docker build --build-arg ETCDVER=${params.etcdVer} -t etcd-img-${params.etcdVer} -f Docker/etcd.dockerfile ."
+            }
+        }
+
+        stage ('Run') {
+            steps {
+                sh "docker run -dit --network=ci.network --name etcd-cnt-${params.etcdVer} etcd-img-${params.etcdVer}"
+            }
+        }
+
+        stage ('Status') {
+            steps {
+                sh "docker exec -u root etcd-cnt-${params.etcdVer} etcd --version"
+            }
+        }
+
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
