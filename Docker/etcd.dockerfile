@@ -26,6 +26,7 @@ ARG UID=1004
 RUN useradd -d $HOME -g $GROUP -u ${UID} -m $USER
 
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV ETCDCTL_API=3
 
-#EXPOSE 80
-CMD /bin/bash
+EXPOSE 2379
+CMD /usr/local/bin/etcd

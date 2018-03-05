@@ -27,7 +27,7 @@ pipeline {
 
         stage ('Run') {
             steps {
-                sh "docker run -dit --network=ci.network --name etcd-cnt-${params.etcdVer} etcd-img-${params.etcdVer}"
+                sh "docker run -dit -p 2379:2379 --network=ci.network --name etcd-cnt-${params.etcdVer} etcd-img-${params.etcdVer}"
             }
         }
 
