@@ -2,8 +2,13 @@ pipeline {
     agent any
 
     parameters {
-        string(defaultValue: '3.3.1', description: 'Version of Etcd', name: 'etcdVer')
+        string(defaultValue: '3.3.1', description: 'Version of Etcd', name: 'Version')
     }
+
+    environment {
+        Hostname = 'etcd.host'
+    }
+
 
     options {
         timeout(time: 1, unit: 'HOURS')
@@ -14,26 +19,26 @@ pipeline {
     stages {
         stage ('Stop') {
             steps {
-                sh "docker container stop etcd-cnt-${params.etcdVer} || echo ok"
-                sh "docker container rm etcd-cnt-${params.etcdVer} || echo ok"
+                sh "docker container stop ${env.Hostname} || echo ok"
+                sh "docker container rm ${env.Hostname} || echo ok"
             }
         }
 
         stage ('Build') {
             steps {
-                sh "docker build --build-arg ETCDVER=${params.etcdVer} -t etcd-img-${params.etcdVer} -f Docker/etcd.dockerfile ."
+                sh "docker build --build-arg ETCDVER=${params.Version} -t etcd-img-${params.Version} -f Docker/etcd.dockerfile ."
             }
         }
 
         stage ('Run') {
             steps {
-                sh "docker run -dit -p 2379:2379 --network=ci.network --name etcd-cnt-${params.etcdVer} etcd-img-${params.etcdVer}"
+                sh "docker run -dit -p 2379:2379 --network=ci.network --name ${env.Hostname} etcd-img-${params.Version}"
             }
         }
 
         stage ('Status') {
             steps {
-                sh "docker exec -u root etcd-cnt-${params.etcdVer} etcd --version"
+                sh "docker exec -u root ${env.Hostname} etcd --version"
             }
         }
 
@@ -42,6 +47,11 @@ pipeline {
     post {
         always {
             cleanWs()
+        }
+
+        success {
+            build job: 'Start Postgres', parameters: [string(name: 'Version', value: '9.4')], wait: false
+            build job: 'Start Elastic', parameters: [string(name: 'Version', value: '611')], wait: false
         }
     }
 }

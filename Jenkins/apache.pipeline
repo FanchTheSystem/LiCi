@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     parameters {
-        string(defaultValue: '7.1', description: 'Version of Php', name: 'phpVer')
+        string(defaultValue: '7.1', description: 'Version of Php', name: 'phpVersion')
     }
 
     environment {
-        apachePort = sh(returnStdout: true, script: "echo 80${params.phpVer} | sed -e s/'\\.'//g").trim()
+        apachePort = sh(returnStdout: true, script: "echo 80${params.phpVersion} | sed -e s/'\\.'//g").trim()
      }
 
     options {
@@ -24,28 +24,28 @@ pipeline {
 
         stage ('Stop') {
             steps {
-                sh "docker container stop apache-cnt-${params.phpVer} || echo ok"
-                sh "docker container rm apache-cnt-${params.phpVer} || echo ok"
+                sh "docker container stop apache-cnt-${params.phpVersion} || echo ok"
+                sh "docker container rm apache-cnt-${params.phpVersion} || echo ok"
             }
         }
 
         stage ('Build') {
             steps {
-                sh "docker build --build-arg PHPVER=${params.phpVer} -t apache-img-${params.phpVer} -f Docker/apache.dockerfile ."
+                sh "docker build --build-arg PHPVER=${params.phpVersion} -t apache-img-${params.phpVersion} -f Docker/apache.dockerfile ."
             }
         }
 
         stage ('Run') {
             steps {
-                sh "docker run -dit -p ${env.apachePort}:80 --network=ci.network  --volume /home/jenkins/public_html:/home/jenkins/public_html --name apache-cnt-${params.phpVer} apache-img-${params.phpVer}"
+                sh "docker run -dit -p ${env.apachePort}:80 --network=ci.network  --volume /home/jenkins/public_html:/home/jenkins/public_html --name apache-cnt-${params.phpVersion} apache-img-${params.phpVersion}"
             }
         }
 
         stage ('Status') {
             steps {
-                sh "docker exec -u root apache-cnt-${params.phpVer} sleep 3 # wait apache restarting (in previous docker run)"
-                sh "docker exec -u root apache-cnt-${params.phpVer} service apache2 status"
-                sh "docker exec -u root apache-cnt-${params.phpVer} php --version"
+                sh "docker exec -u root apache-cnt-${params.phpVersion} sleep 3 # wait apache restarting (in previous docker run)"
+                sh "docker exec -u root apache-cnt-${params.phpVersion} service apache2 status"
+                sh "docker exec -u root apache-cnt-${params.phpVersion} php --version"
             }
         }
     }

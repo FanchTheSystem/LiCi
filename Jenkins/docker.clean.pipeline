@@ -26,20 +26,20 @@ pipeline {
         stage ('Start') {
             steps {
                 sh 'docker network create ci.network'
-                sh 'docker run -d -p 5601:5601 -p 9200:9200 -p 5044:5044 --network=ci.network   --name elk.host sebp/elk:611'
+                /* sh 'docker run -d -p 5601:5601 -p 9200:9200 -p 5044:5044 --network=ci.network   --name elk.host sebp/elk:611' */
                 /* sh 'docker run -d -p 9001:9000  --name portainer.host -v /var/run/docker.sock:/var/run/docker.sock -v /opt/portainer:/data portainer/portainer' */
-                sh 'docker run -d --network=ci.network --name postgres.host -e POSTGRES_PASSWORD=postgres24  postgres:9.4-alpine'
+                /* sh 'docker run -d --network=ci.network --name postgres.host -e POSTGRES_PASSWORD=postgres24  postgres:9.4-alpine' */
                 /* sh 'docker run -d -p 4444:4444  --network=ci.network --name selenium.host -v /dev/shm:/dev/shm -e SE_OPTS="-debug -enablePassThrough false" selenium/standalone-firefox:3.7.0' */
             }
         }
-
+        /*
         stage ('Build Usefull') {
             steps {
                 sh 'wget https://raw.githubusercontent.com/sil-project/Platform/master/etc/dockerfile.build.jenkins'
                 sh 'docker build -t sil-platform-img -f dockerfile.build.jenkins .'
             }
         }
-
+        */
         stage ('Inspect') {
             steps {
                 sh 'docker images'
@@ -57,10 +57,10 @@ pipeline {
 
         success {
             /* Warning: need 'Start Apache as job Name in Jenkins */
-            build job: 'Start Apache', parameters: [string(name: 'phpVer', value: '5.6')], wait: false
-            build job: 'Start Apache', parameters: [string(name: 'phpVer', value: '7.1')], wait: false
-            /* build job: 'Start Apache', parameters: [string(name: 'phpVer', value: '7.2')], wait: false */
-
+            build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '5.6')], wait: false
+            build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '7.1')], wait: false
+            /* build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '7.2')], wait: false */
+            build job: 'Start Etcd', parameters: [string(name: 'Version', value: '3.3.1')], wait: false
         }
     }
 }

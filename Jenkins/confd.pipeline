@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        string(defaultValue: '0.15.0', description: 'Version of Confd', name: 'confdVer')
+        string(defaultValue: '0.15.0', description: 'Version of Confd', name: 'Version')
     }
 
     options {
@@ -14,26 +14,26 @@ pipeline {
     stages {
         stage ('Stop') {
             steps {
-                sh "docker container stop confd-cnt-${params.confdVer} || echo ok"
-                sh "docker container rm confd-cnt-${params.confdVer} || echo ok"
+                sh "docker container stop confd.host || echo ok"
+                sh "docker container rm confd.host || echo ok"
             }
         }
 
         stage ('Build') {
             steps {
-                sh "docker build --build-arg CONFDVER=${params.confdVer} -t confd-img-${params.confdVer} -f Docker/confd.dockerfile ."
+                sh "docker build --build-arg CONFDVER=${params.Version} -t confd-img-${params.Version} -f Docker/confd.dockerfile ."
             }
         }
 
         stage ('Run') {
             steps {
-                sh "docker run -dit --network=ci.network --name confd-cnt-${params.confdVer} confd-img-${params.confdVer}"
+                sh "docker run -dit --network=ci.network --name confd.host confd-img-${params.Version}"
             }
         }
 
         stage ('Status') {
             steps {
-                sh "docker exec -u root confd-cnt-${params.confdVer} confd --version"
+                sh "docker exec -u root confd.host confd --version"
             }
         }
 
