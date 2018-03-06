@@ -26,7 +26,7 @@ pipeline {
         }
         stage ('Prepare') {
             steps {
-                sh "mkdir -p ${params.Repo}"
+                sh "mkdir -p ${params.Repo}/${params.Project}"
             }
         }
         stage ('Copy') {
@@ -46,6 +46,7 @@ pipeline {
         }
         stage ('Clean') {
             steps {
+                sh "ls -lrt ${params.Repo}/${params.Project}"
                 sh "ls -t ${params.Repo}| head -n3 # add a rm for file not in list"
             }
         }
