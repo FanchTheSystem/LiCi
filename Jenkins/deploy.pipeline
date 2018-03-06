@@ -10,7 +10,7 @@ pipeline {
 
     environment {
         apachePort = sh(returnStdout: true, script: "echo 80${params.phpVer} | sed -e s/'\\.'//g").trim()
-        Target="/home/jenkins/public_html/${params.Project}"
+        Target="$HOME/public_html/${params.Project}"
         }
 
 
