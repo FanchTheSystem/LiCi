@@ -29,4 +29,4 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV ETCDCTL_API=3
 
 EXPOSE 2379
-CMD /usr/local/bin/etcd
+CMD /usr/local/bin/etcd --advertise-client-urls 'http://0.0.0.0:2379' --listen-client-urls 'http://0.0.0.0:2379'
