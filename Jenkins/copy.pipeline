@@ -29,21 +29,24 @@ pipeline {
                 sh "mkdir -p ${params.Repo}/${params.Project}"
             }
         }
-        stage ('Copy') {
-            parallel {
-                stage('Copy Platform') {
-                    steps {
-                        script {
-                            step ([$class: 'CopyArtifact',
-                                   projectName: "${params.Job}",
-                                   filter: "*",
-                                   target: "${params.Repo}/${params.Project}"]);
-                        }
-                    }
-                }
 
+        stage('Copy From Job') {
+            steps {
+                script {
+                    step ([$class: 'CopyArtifact',
+                           projectName: "${params.Job}",
+                           filter: "*",
+                           target: "./Artifact"]);
+                }
             }
         }
+
+        stage('Copy To Repo') {
+            steps {
+                sh  "cp -rp ./Artifact/* ${params.Repo}/${params.Project}/"
+            }
+        }
+
         stage ('Clean') {
             steps {
                 sh "ls -lrt ${params.Repo}/${params.Project}"
