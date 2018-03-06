@@ -12,7 +12,8 @@ RUN apt-get install --no-install-recommends -y vim-nox \
 ARG CONFDVER=0.15.0
 RUN wget -q https://github.com/kelseyhightower/confd/releases/download/v${CONFDVER}/confd-${CONFDVER}-linux-amd64 -O /usr/local/bin/confd \
     && chmod 755 /usr/local/bin/confd \
-    && mkdir -p /etc/confd/{conf.d,templates}
+    && mkdir -p /etc/confd/conf.d \
+    && mkdir -p /etc/confd/templates
 
 ENV HOME=/home/jenkins
 ENV USER=jenkins
