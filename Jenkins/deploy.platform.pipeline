@@ -44,6 +44,8 @@ pipeline {
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/console cache:clear --env=prod # May be Needed after parameter update"
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/install_db_test.sh"
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/update_channel_hostname.sh"
+                /* run a cache clear on env test to allow debug on deployed instance */
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/console cache:clear --env=test"
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/console cache:clear --env=prod"
            }
         }
