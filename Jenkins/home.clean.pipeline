@@ -8,11 +8,6 @@ pipeline {
     }
 
     stages {
-        stage ('Stop') {
-            steps {
-                sh 'for i in $(docker container ls -q); do docker container stop $i; docker container rm -v $i; done'
-            }
-        }
 
         stage ('Purge') {
             steps {
@@ -45,5 +40,10 @@ pipeline {
         always {
             cleanWs()
         }
+
+        success {
+            build job: 'Clean Docker', wait: false
+        }
+
     }
 }
