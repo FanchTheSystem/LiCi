@@ -11,8 +11,9 @@ pipeline {
     environment {
         apachePort = sh(returnStdout: true, script: "echo 80${params.phpVer} | sed -e s/'\\.'//g").trim()
         Target="$HOME/public_html/${params.Project}"
-        }
-
+        /* May not be the same as on host */
+        DockerTarget="/home/jenkins/public_html/${params.Project}"
+    }
 
     options {
         timeout(time: 1, unit: 'HOURS')
@@ -36,13 +37,13 @@ pipeline {
         /* Todo should check if database exist in some kind of prod scripts*/
         stage ('Create Database') {
             steps {
-                sh "docker exec -u jenkins -w ${env.Target}/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/set_db_host_test.sh"
-                sh "docker exec -u jenkins -w ${env.Target}/${params.Branch}/ apache-cnt-${params.phpVer} cp app/config/parameters.yml.dist app/config/parameters.yml"
-                sh "docker exec -u jenkins -w ${env.Target}/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/create_database_test.sh"
-                sh "docker exec -u jenkins -w ${env.Target}/${params.Branch}/ apache-cnt-${params.phpVer} bin/console cache:clear --env=prod # May be Needed after parameter update"
-                sh "docker exec -u jenkins -w ${env.Target}/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/install_db_test.sh"
-                sh "docker exec -u jenkins -w ${env.Target}/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/update_channel_hostname.sh"
-                sh "docker exec -u jenkins -w ${env.Target}/${params.Branch}/ apache-cnt-${params.phpVer} bin/console cache:clear --env=prod"
+                sh "docker exec -u jenkins -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/set_db_host_test.sh"
+                sh "docker exec -u jenkins -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} cp app/config/parameters.yml.dist app/config/parameters.yml"
+                sh "docker exec -u jenkins -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/create_database_test.sh"
+                sh "docker exec -u jenkins -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/console cache:clear --env=prod # May be Needed after parameter update"
+                sh "docker exec -u jenkins -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/install_db_test.sh"
+                sh "docker exec -u jenkins -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/update_channel_hostname.sh"
+                sh "docker exec -u jenkins -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/console cache:clear --env=prod"
            }
         }
 
