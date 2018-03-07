@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    stages {
+        stage ('Stop') {
+            steps {
+                sh 'for i in $(docker container ls -q); do docker container stop $i; docker container rm -v $i; done'
+            }
+        }
+
+        stage ('Purge') {
+            steps {
+                sh "rm -rf $HOME/public_html $HOME/cache"
+            }
+        }
+
+        stage ('Create Directory') {
+            steps {
+                sh "mkdir -p $HOME/public_html/repo"
+                sh "mkdir -p $HOME/cache/composer  $HOME/cache/node_modules  $HOME/cache/npm  $HOME/cache/pip"
+            }
+        }
+
+        stage ('Set Permission') {
+            steps {
+                sh "chmod -R 755 $HOME/public_html $HOME/cache"
+                sh "chown -R jenkins:www-data $HOME/public_html"
+            }
+        }
+
+        stage ('Default Php Info') {
+            steps {
+                sh "echo '<?php phpinfo(); ?>' > $HOME/public_html/phpinfo.php"
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
