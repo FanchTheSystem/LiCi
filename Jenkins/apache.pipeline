@@ -37,7 +37,7 @@ pipeline {
 
         stage ('Run') {
             steps {
-                sh "docker run -dit -p ${env.apachePort}:80 --network=ci.network  --volume ${HOME}/public_html:/home/jenkins/public_html --name apache-cnt-${params.phpVersion} apache-img-${params.phpVersion}"
+                sh "docker run -dit -p ${env.apachePort}:80 --network=ci.network  --volume ${HOME}/public_html:/home/jenkins/public_html --memory-swappiness 0 --name apache-cnt-${params.phpVersion} apache-img-${params.phpVersion}"
             }
         }
 
