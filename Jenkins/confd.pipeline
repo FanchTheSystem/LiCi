@@ -40,8 +40,8 @@ pipeline {
         stage ('Tests') {
             steps {
                 sh "docker cp Tests/confd confd.host:/tmp/"
-                sh "docker exec confd.host -w /tmp confd -onetime -backend etcdv3 -node http://etcd.host:2379 -confdir /tmp/confd -log-level debug -prefix '/default'"
-                sh "docker exec confd.host -w /tmp cat /tmp/my.test.conf"
+                sh "docker exec -w /tmp confd.host  confd -onetime -backend etcdv3 -node http://etcd.host:2379 -confdir /tmp/confd -log-level debug -prefix '/default'"
+                sh "docker exec -w /tmp confd.host cat /tmp/my.test.conf"
             }
         }
 
