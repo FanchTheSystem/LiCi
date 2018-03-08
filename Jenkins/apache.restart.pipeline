@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(defaultValue: '7.1', description: 'Version of Php', name: 'phpVersion')
+    }
+
+    environment {
+        apachePort = sh(returnStdout: true, script: "echo 80${params.phpVersion} | sed -e s/'\\.'//g").trim()
+     }
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    stages {
+        stage ('Stop') {
+            steps {
+                sh "docker exec -u root apache-cnt-${params.phpVersion} service apache2 stop"
+            }
+        }
+
+        stage ('Start') {
+            steps {
+                sh "docker exec -u root apache-cnt-${params.phpVersion} service apache2 start"
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
