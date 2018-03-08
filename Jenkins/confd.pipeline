@@ -33,7 +33,15 @@ pipeline {
 
         stage ('Status') {
             steps {
-                sh "docker exec -u root confd.host confd --version"
+                sh "docker exec confd.host confd --version"
+            }
+        }
+
+        stage ('Tests') {
+            steps {
+                sh "docker cp Tests/confd confd.host:/tmp/"
+                sh "docker exec confd -onetime -backend etcdv3 -node http://etcd.host:2379 -confdir /tmp/confd -log-level debug -prefix '/default'"
+                sh "docker exec cat /tmp/my.test.conf"
             }
         }
 

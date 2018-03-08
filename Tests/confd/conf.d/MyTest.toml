@@ -1,0 +1,8 @@
+[template]
+src = "my.test.conf.tmpl"
+dest = "my.test.conf"
+keys = [
+       "/postgres/hostname",
+       "/postgres/rootusername",
+       "/postgres/rootpassword",
+]
