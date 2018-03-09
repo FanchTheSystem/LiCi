@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    stages {
+        stage ('Platform') {
+            steps {
+                sh 'rm -f dockerfile.build.jenkins'
+                sh 'wget https://raw.githubusercontent.com/sil-project/Platform/master/etc/dockerfile.build.jenkins'
+                sh 'docker build -t sil-platform-img -f dockerfile.build.jenkins .'
+            }
+        }
+
+        stage ('E-venement') {
+            steps {
+                sh 'rm -f dockerfile.jenkins'
+                sh 'wget https://raw.githubusercontent.com/e-venement/e-venement/master/etc/dockerfile.jenkins'
+                sh 'docker build -t eve-img -f dockerfile.jenkins .'
+            }
+        }
+
+        stage ('Skeleton') {
+            steps {
+                sh 'rm -f dockerfile.jenkins'
+                sh 'wget https://raw.githubusercontent.com/sil-project/Platform/master/src/Skeleton/etc/dockerfile.jenkins'
+                sh 'docker build -t skeleton-img -f dockerfile.jenkins .'
+            }
+        }
+
+
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
