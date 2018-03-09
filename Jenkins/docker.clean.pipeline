@@ -54,7 +54,6 @@ pipeline {
             build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '7.1')], wait: false
             /* build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '7.2')], wait: false */
             build job: 'Start Etcd', parameters: [string(name: 'Version', value: '3.3.1')], wait: false
-            build job: 'Start Postgres', parameters: [string(name: 'Version', value: '9.4')], wait: false
             build job: 'Start Prefetch', wait: false
         }
     }
