@@ -10,27 +10,19 @@ pipeline {
     stages {
         stage ('Platform') {
             steps {
-                sh 'rm -f dockerfile.build.jenkins'
-                sh 'wget https://raw.githubusercontent.com/sil-project/Platform/master/etc/dockerfile.build.jenkins'
-                sh 'docker build -t sil-platform-img -f dockerfile.build.jenkins .'
+                sh 'git clone https://github.com/sil-project/Platform.git --depth 1'
+                sh 'cd Platform/etc && docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t platform-img -f dockerfile.build.jenkins . && cd -'
+                sh 'cd Platform/src/Skeleton/etc && docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t skeleton-img -f dockerfile.jenkins . && cd -'
             }
         }
 
         stage ('E-venement') {
             steps {
-                sh 'rm -f dockerfile.jenkins'
-                sh 'wget https://raw.githubusercontent.com/e-venement/e-venement/master/etc/dockerfile.jenkins'
-                sh 'docker build -t eve-img -f dockerfile.jenkins .'
+                sh 'git clone https://github.com/e-venement/e-venement.git --depth 1'
+                sh 'cd e-venement/etc && docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t eve-img -f dockerfile.jenkins . && cd -'
             }
         }
 
-        stage ('Skeleton') {
-            steps {
-                sh 'rm -f dockerfile.jenkins'
-                sh 'wget https://raw.githubusercontent.com/sil-project/Platform/master/src/Skeleton/etc/dockerfile.jenkins'
-                sh 'docker build -t skeleton-img -f dockerfile.jenkins .'
-            }
-        }
 
 
     }
