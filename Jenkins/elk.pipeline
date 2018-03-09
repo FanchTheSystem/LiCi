@@ -35,8 +35,8 @@ pipeline {
         stage ('Set Env')
         {
             steps {
-                sh "docker exec etcd.host etcdctl put default/elk/hostname ${env.Hostname}"
-                sh "docker exec etcd.host etcdctl get --prefix default"
+                sh "docker exec etcd.host etcdctl put /default/elastic/hostname ${env.Hostname}"
+                sh "docker exec etcd.host etcdctl get --prefix '/default'"
             }
         }
     }

@@ -35,8 +35,8 @@ pipeline {
             steps {
                 sh "docker exec etcd.host etcdctl put /default/postgres/hostname ${env.Hostname}"
                 /* hum need to env var this too ? */
-                sh "docker exec etcd.host etcdctl put /default/postgres/rootusername postgres"
-                sh "docker exec etcd.host etcdctl put /default/postgres/rootpassword ${env.Password}"
+                sh "docker exec etcd.host etcdctl put /default/postgres/root/username postgres"
+                sh "docker exec etcd.host etcdctl put /default/postgres/root/password ${env.Password}"
                 /* Maybe add also version in a env variable to install the good client on docker image */
                 sh "docker exec etcd.host etcdctl get --prefix '/default'"
             }
