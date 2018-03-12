@@ -30,13 +30,13 @@ pipeline {
             }
         }
 
-        /*
+
         stage ('Eve') {
             steps {
                 sh "docker exec ${env.Hostname} etcdctl get --prefix '/eve'"
             }
         }
-        */
+
 
     }
 
