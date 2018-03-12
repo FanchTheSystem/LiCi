@@ -82,7 +82,7 @@ DBAPPNAME=sil_db_${CleanBranch}
 DBAPPUSER=sil_user_${CleanBranch}
 DBAPPPASSWORD=sil_password
 
-ELHOST=elk.host
+ELHOST=elastic.host
 ELALIAS=sil_${CleanBranch}
 
 CHANNELURL=${Url}
