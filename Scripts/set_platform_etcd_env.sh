@@ -5,14 +5,15 @@ export ETCDCTL_API=3
 # Branch
 
 
-if [ -z ${Prefix} ]
+if [ -z ${Suffix} ]
 then
     if [ -z ${Branch} ]
     then
         Branch=master
     fi
-    Prefix="/platform/dev/"$(echo $Branch|sed -e s/-/_/g|tr '[:upper:]' '[:lower:]')
+    Suffix=$(echo $Branch|sed -e s/-/_/g|tr '[:upper:]' '[:lower:]')
 fi
+Prefix="/platform/dev/"$Suffix
 
 if [ -z "$ETCDHOST" ]
 then
@@ -41,25 +42,25 @@ elastichost=$($ETCDCTLCMD get /default/elastic/hostname --print-value-only $ETCD
 apacheurl=$($ETCDCTLCMD get /default/apache/7.1/servername --print-value-only $ETCDENDPOINT)
 
 # set postgres env
-$ETCDCTLCMD put $prefix/postgres/hostname $postgreshost $ETCDENDPOINT
-$ETCDCTLCMD put $prefix/postgres/root/username $postgresuser $ETCDENDPOINT
-$ETCDCTLCMD put $prefix/postgres/root/password $postgrespass $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/postgres/hostname $postgreshost $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/postgres/root/username $postgresuser $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/postgres/root/password $postgrespass $ETCDENDPOINT
 
-$ETCDCTLCMD put $prefix/postgres/user/dbname sil_db_$prefix $ETCDENDPOINT
-$ETCDCTLCMD put $prefix/postgres/user/username sil_user_$prefix $ETCDENDPOINT
-$ETCDCTLCMD put $prefix/postgres/user/password sil_password_$prefix $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/postgres/user/dbname sil_db_$Suffix $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/postgres/user/username sil_user_$Suffix $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/postgres/user/password sil_password_$Suffix $ETCDENDPOINT
 
 # set elastic env
-$ETCDCTLCMD put $prefix/elastic/hostname $elastichost $ETCDENDPOINT
-$ETCDCTLCMD put $prefix/elastic/indexalias sil_$prefix $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/elastic/hostname $elastichost $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/elastic/indexalias sil_$Suffix $ETCDENDPOINT
 
 # set symfony env
-$ETCDCTLCMD put $prefix/symfony/env test $ETCDENDPOINT # maybe put this in env variable (or not)
+$ETCDCTLCMD put $Prefix/symfony/env test $ETCDENDPOINT # maybe put this in env variable (or not)
 # not used on deploy, may be need for conf
-$ETCDCTLCMD put $prefix/symfony/addr '127.0.0.1:8042' $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/symfony/addr '127.0.0.1:8042' $ETCDENDPOINT
 
-$ETCDCTLCMD put $prefix/sylius/channelurl $apacheurl $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/sylius/channelurl $apacheurl $ETCDENDPOINT
 
-$ETCDCTLCMD get --prefix $prefix $ETCDENDPOINT
+$ETCDCTLCMD get --prefix $Prefix $ETCDENDPOINT
 
-#confd -onetime -backend etcdv3 -node http://${ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix $prefix
+#confd -onetime -backend etcdv3 -node http://${ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix $Prefix
