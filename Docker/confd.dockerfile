@@ -3,10 +3,7 @@ FROM debian:stable
 # https://issues.jenkins-ci.org/browse/JENKINS-31507
 #as phpcli_for_platform
 
-RUN apt-get update && apt-get install --no-install-recommends -y apt-transport-https lsb-release ca-certificates net-tools lsof postgresql-client wget \
-    && apt-get autoremove -y && apt-get clean
-
-RUN apt-get install --no-install-recommends -y vim-nox \
+RUN apt-get update && apt-get install --no-install-recommends -y apt-transport-https lsb-release ca-certificates net-tools lsof wget vim-nox \
     && apt-get autoremove -y && apt-get clean
 
 ARG CONFDVER=0.15.0
