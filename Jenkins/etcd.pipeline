@@ -32,7 +32,7 @@ pipeline {
 
         stage ('Run') {
             steps {
-                sh "docker run -d -p 2379:2379 --network=ci.network  --memory-swappiness 0 --name ${env.Hostname} etcd-img-${params.Version}"
+                sh "docker run -dt -p 2379:2379 --network=ci.network --name ${env.Hostname} etcd-img-${params.Version}"
             }
         }
 

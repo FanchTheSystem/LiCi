@@ -26,7 +26,7 @@ pipeline {
 
         stage ('Run') {
             steps {
-                 sh "docker run -d --network=ci.network --name ${env.Hostname} -e POSTGRES_PASSWORD=${env.Password} --memory-swappiness 0 postgres:${params.Version}-alpine"
+                 sh "docker run -dt --network=ci.network --name ${env.Hostname} -e POSTGRES_PASSWORD=${env.Password} postgres:${params.Version}-alpine"
             }
         }
 

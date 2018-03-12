@@ -27,7 +27,7 @@ pipeline {
 
         stage ('Run') {
             steps {
-                sh "docker run -d --network=ci.network  --memory-swappiness 0 --name confd.host confd-img-${params.Version}"
+                sh "docker run -dt --network=ci.network --name confd.host confd-img-${params.Version}"
             }
         }
 
