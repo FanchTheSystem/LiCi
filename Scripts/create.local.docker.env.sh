@@ -19,4 +19,5 @@ export Hostname=confd.host
 run_pipeline_sh Jenkins/confd.pipeline
 
 export Version=6.1.1
+export Hostname=elastic.host
 run_pipeline_sh Jenkins/elastic.pipeline
