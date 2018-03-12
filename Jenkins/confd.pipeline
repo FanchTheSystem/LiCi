@@ -27,7 +27,8 @@ pipeline {
 
         stage ('Run') {
             steps {
-                sh "docker run -dt --network=ci.network --name confd.host confd-img-${params.Version}"
+                /* warning we mount public_html volume to be able to access user directory from apache container (for deploiement custom configuration)*/
+                sh "docker run -dt --network=ci.network --volume ${HOME}/public_html:/home/jenkins/public_html --name confd.host confd-img-${params.Version}"
             }
         }
 
