@@ -32,13 +32,13 @@ pipeline {
 
         stage ('Run') {
             steps {
-                sh "docker run -dit -p 2379:2379 --network=ci.network  --memory-swappiness 0 --name ${env.Hostname} etcd-img-${params.Version}"
+                sh "docker run -d -p 2379:2379 --network=ci.network  --memory-swappiness 0 --name ${env.Hostname} etcd-img-${params.Version}"
             }
         }
 
         stage ('Status') {
             steps {
-                sh "docker exec -u root ${env.Hostname} etcd --version"
+                sh "docker exec ${env.Hostname} etcd --version"
             }
         }
 

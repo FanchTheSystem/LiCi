@@ -38,15 +38,15 @@ pipeline {
 
         stage ('Run') {
             steps {
-                sh "docker run -dit -p ${env.apachePort}:80 --network=ci.network  --volume ${HOME}/public_html:/home/jenkins/public_html --memory-swappiness 0 --name apache-cnt-${params.phpVersion} apache-img-${params.phpVersion}"
+                sh "docker run -d -p ${env.apachePort}:80 --network=ci.network  --volume ${HOME}/public_html:/home/jenkins/public_html --memory-swappiness 0 --name apache-cnt-${params.phpVersion} apache-img-${params.phpVersion}"
             }
         }
 
         stage ('Status') {
             steps {
-                sh "docker exec -u root apache-cnt-${params.phpVersion} sleep 3 # wait apache restarting (in previous docker run)"
+                sh "sleep 3 # wait apache restarting (in previous docker run)"
                 sh "docker exec -u root apache-cnt-${params.phpVersion} service apache2 status"
-                sh "docker exec -u root apache-cnt-${params.phpVersion} php --version"
+                sh "docker exec apache-cnt-${params.phpVersion} php --version"
             }
         }
 
