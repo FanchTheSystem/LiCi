@@ -17,3 +17,6 @@ run_pipeline_sh Jenkins/postgres.pipeline
 export Version=0.15.0
 export Hostname=confd.host
 run_pipeline_sh Jenkins/confd.pipeline
+
+export Version=6.1.1
+run_pipeline_sh Jenkins/elastic.pipeline
