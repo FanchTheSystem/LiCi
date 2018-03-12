@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    environment {
+        Hostname = 'etcd.host'
+    }
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    stages {
+        stage ('Status') {
+            steps {
+                sh "docker exec ${env.Hostname} etcd --version"
+            }
+        }
+
+        stage ('Default') {
+            steps {
+                sh "docker exec ${env.Hostname} etcdctl get --prefix '/default'"
+            }
+        }
+
+        stage ('Platform') {
+            steps {
+                sh "docker exec ${env.Hostname} etcdctl get --prefix '/default'"
+            }
+        }
+
+        /*
+        stage ('Eve') {
+            steps {
+                sh "docker exec ${env.Hostname} etcdctl get --prefix '/eve'"
+            }
+        }
+        */
+
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
