@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         apachePort = sh(returnStdout: true, script: "echo 80${params.phpVersion} | sed -e s/'\\.'//g").trim()
+        apacheUrl = 'seti.libre-informatique.fr'
      }
 
     options {
@@ -46,6 +47,15 @@ pipeline {
                 sh "docker exec -u root apache-cnt-${params.phpVersion} sleep 3 # wait apache restarting (in previous docker run)"
                 sh "docker exec -u root apache-cnt-${params.phpVersion} service apache2 status"
                 sh "docker exec -u root apache-cnt-${params.phpVersion} php --version"
+            }
+        }
+
+        stage ('Set Env') {
+            steps {
+                sh "docker exec etcd.host etcdctl put /default/apache/${params.phpVersion}/hostname apache-cnt-${params.phpVersion}"
+                sh "docker exec etcd.host etcdctl put /default/apache/${params.phpVersion}/port ${env.apachePort}"
+                sh "docker exec etcd.host etcdctl put /default/apache/${params.phpVersion}/servername ${env.apacheUrl}"
+                sh "docker exec etcd.host etcdctl get --prefix '/default'"
             }
         }
     }
