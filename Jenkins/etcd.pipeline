@@ -55,7 +55,7 @@ pipeline {
             build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '7.1')], wait: false
             /* build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '7.2')], wait: false */
             build job: 'Start Postgres', parameters: [string(name: 'Version', value: '9.4')], wait: false
-            build job: 'Start Elastic', parameters: [string(name: 'Version', value: '611')], wait: false
+            build job: 'Start Elastic', parameters: [string(name: 'Version', value: '6.1.1')], wait: false
         }
     }
 }
