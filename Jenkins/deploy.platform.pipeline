@@ -53,7 +53,7 @@ pipeline {
         /* Todo should check if database exist in some kind of prod scripts*/
         stage ('Create Database') {
             steps {
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/set_db_host_test.sh"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/set_pgpass_test.sh"
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} cp app/config/parameters.yml.dist app/config/parameters.yml"
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/ci-scripts/create_database_test.sh"
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} bin/console cache:clear --env=prod # May be Needed after parameter update"
