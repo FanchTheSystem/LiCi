@@ -28,7 +28,7 @@ pipeline {
             /*
                 sh "docker run -d -p 5601:5601 -p 9200:9200 -p 5044:5044 --network=ci.network --memory-swappiness 0 --name ${env.Hostname} sebp/elk:${params.Version}"
             */
-                sh "docker run -d -p 9200:9200 -p 9300:9300 -network=ci.network --memory-swappiness 0 --name ${env.Hostname} -e 'discovery.type=single-node' docker.elastic.co/elasticsearch/elasticsearch:6.1.1"
+                sh "docker run -d -p 9200:9200 -p 9300:9300 --network=ci.network --memory-swappiness 0 --name ${env.Hostname} -e 'discovery.type=single-node' docker.elastic.co/elasticsearch/elasticsearch:6.1.1"
             }
         }
 
