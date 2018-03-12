@@ -13,7 +13,11 @@ then
     fi
     Suffix=$(echo $Branch|sed -e s/-/_/g|tr '[:upper:]' '[:lower:]')
 fi
-Prefix="/platform/dev/"$Suffix
+
+if [ -z ${Prefix} ]
+then
+    Prefix="/platform/dev/"$Suffix
+fi
 
 if [ -z "$ETCDHOST" ]
 then

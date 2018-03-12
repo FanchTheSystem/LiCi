@@ -10,7 +10,9 @@ pipeline {
 
     environment {
         apachePort = sh(returnStdout: true, script: "echo 80${params.phpVer} | sed -e s/'\\.'//g").trim()
-        Target="$HOME/public_html/${params.Project}"
+        Suffix = sh(returnStdout: true, script: "echo ${params.Branch} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'")
+        Prefix = sh(returnStdout: true, script: "echo /${params.Project}/dev/${params.Branch}/ |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'")
+        Target = "$HOME/public_html/${params.Project}"
         /* May not be the same as on host */
         DockerTarget="/home/jenkins/public_html/${params.Project}"
     }
@@ -23,25 +25,31 @@ pipeline {
 
     stages {
 
-        stage ('Check') {
+        stage ('Check Apache') {
             steps {
                 sh "docker exec -u root apache-cnt-${params.phpVer} service apache2 status"
            }
         }
-        stage ('Prepare') {
+
+        stage ('Prepare Env') {
             steps {
-                sh "Prefix=${env.Target} ./Scripts/set_platform_etcd_env.sh"
+                sh "./Scripts/set_platform_etcd_env.sh"
            }
         }
 
-
-        /* Todo should have one step for deploy, one for env, and one for config */
-        stage ('Deploy') {
+        stage ('Deploy Archive ') {
             steps {
                 sh "Target=${env.Target} Branch=${params.Branch} Name=${params.Project} Url=${params.Hostname} ./Scripts/deploy_platform_archive.sh"
                 sh "chown -R jenkins:www-data ${env.Target}/${params.Branch}"
             }
         }
+
+        stage ('Set Config File') {
+            steps {
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ confd.host confd -onetime -backend etcdv3 -node http://${ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix $Prefix"
+           }
+        }
+
         /* Todo should check if database exist in some kind of prod scripts*/
         stage ('Create Database') {
             steps {
