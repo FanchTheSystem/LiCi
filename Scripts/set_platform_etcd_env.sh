@@ -59,7 +59,7 @@ $ETCDCTLCMD put $Prefix/elastic/hostname $elastichost $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/elastic/indexalias sil_$Suffix $ETCDENDPOINT
 
 # not used on deploy, may be need for conf
-$ETCDCTLCMD put $prefix/selenium/hostname 127.0.0.1 $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/selenium/hostname 127.0.0.1 $ETCDENDPOINT
 
 # set symfony env
 $ETCDCTLCMD put $Prefix/symfony/env test $ETCDENDPOINT # maybe put this in env variable (or not)
