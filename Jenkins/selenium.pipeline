@@ -25,7 +25,7 @@ pipeline {
 
         stage ('Run') {
             steps {
-                sh "docker run -d -p 4444:4444 --network=ci.network --name ${env.Hostname} -v /dev/shm:/dev/shm -e SE_OPTS='-debug -enablePassThrough false' selenium/standalone-$Version"
+                sh "docker run -d -p 4444:4444 --network=ci.network --name ${env.Hostname} -v /dev/shm:/dev/shm -e SE_OPTS='-debug -enablePassThrough false' selenium/standalone-${env.Version}"
             }
         }
 
