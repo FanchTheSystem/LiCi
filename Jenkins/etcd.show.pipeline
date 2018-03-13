@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    parameters {
+        string(defaultValue: '/default', description: 'Get value from prefix', name: 'Prefix')
+    }
+
     environment {
         Hostname = 'etcd.host'
     }
@@ -18,24 +22,12 @@ pipeline {
             }
         }
 
-        stage ('Default') {
+        stage ('Value') {
             steps {
-                sh "docker exec ${env.Hostname} etcdctl get --prefix '/default'"
+                sh "docker exec ${env.Hostname} etcdctl get --prefix '${env.Prefix}'"
             }
         }
 
-        stage ('Platform') {
-            steps {
-                sh "docker exec ${env.Hostname} etcdctl get --prefix '/default'"
-            }
-        }
-
-
-        stage ('Eve') {
-            steps {
-                sh "docker exec ${env.Hostname} etcdctl get --prefix '/eve'"
-            }
-        }
 
 
     }
