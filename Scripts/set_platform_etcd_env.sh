@@ -11,7 +11,7 @@ then
     then
         Branch=master
     fi
-    Suffix=$(echo $Branch|sed -e s/-/_/g|tr '[:upper:]' '[:lower:]')
+    Suffix=$(echo $Branch|sed -e s/-/_/g|sed -e s/ //g|tr '[:upper:]' '[:lower:]')
 fi
 
 if [ -z ${Prefix} ]
