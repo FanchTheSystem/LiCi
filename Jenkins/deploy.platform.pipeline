@@ -15,6 +15,7 @@ pipeline {
         Target = "$HOME/public_html/${params.Project}"
         /* May not be the same as on host */
         DockerTarget="/home/jenkins/public_html/${params.Project}"
+        ETCDHOST = 'etcd.host'
     }
 
     options {
@@ -46,7 +47,7 @@ pipeline {
 
         stage ('Set Config File') {
             steps {
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ confd.host confd -onetime -backend etcdv3 -node http://${ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix $Prefix"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ confd.host confd -onetime -backend etcdv3 -node http://${env.ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix $Prefix"
            }
         }
 
