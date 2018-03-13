@@ -58,42 +58,5 @@ Target=${Target}/${Branch}
 #fi
 mkdir -p ${Target}
 cp -rp ${workDir}/* ${Target}/
-chmod -R 755 ${Target}
 
-
-
-# Url
-if [ -z ${Url} ]
-then
-    Url=127.0.0.1
-fi
-
-#
-#CleanBranch=$(echo $Branch|sed -e s/-/_/g|tr '[:upper:]' '[:lower:]')
-#
-## TODO, should use etcd or other like that tool
-#echo "
-#
-#SERVERENV=prod
-#
-#DBHOST=postgres.host
-#DBROOTUSER=postgres
-#DBROOTPASSWORD=postgres24
-#DBAPPNAME=sil_db_${CleanBranch}
-#DBAPPUSER=sil_user_${CleanBranch}
-#DBAPPPASSWORD=sil_password
-#
-#ELHOST=elastic.host
-#ELALIAS=sil_${CleanBranch}
-#
-#CHANNELURL=${Url}
-#" > ${Target}/.env
-#
-#
-#cat ${Target}/.env
-#
-#
-
-
-# Cleaning
 rm -rf ${workDir}

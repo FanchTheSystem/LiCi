@@ -29,7 +29,10 @@ pipeline {
         stage ('Check Apache') {
             steps {
                 sh "docker exec -u root apache-cnt-${params.phpVer} service apache2 status"
-           }
+                /* todo : maybe remove user dir and use real apache vhost */
+                sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Branch}"
+
+            }
         }
 
         stage ('Prepare Env') {
@@ -41,7 +44,10 @@ pipeline {
         stage ('Deploy Archive ') {
             steps {
                 sh "Target=${env.Target} Branch=${params.Branch} Name=${params.Project} Url=${params.Hostname} ./Scripts/deploy_platform_archive.sh"
-                sh "chown -R jenkins:www-data ${env.Target}/${params.Branch}"
+                /* todo : maybe remove user dir and use real apache vhost */
+                sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Branch}"
+                /* todo : maybe remove user dir and use real apache vhost */
+                sh "docker exec -u root apache-cnt-${params.phpVer} chmod -R 775 ${env.DockerTarget}/${params.Branch}"
             }
         }
 
