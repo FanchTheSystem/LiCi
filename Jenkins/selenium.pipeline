@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(defaultValue: 'firefox:3.7.0-arsenic', description: 'Version of Selenium', name: 'Version')
+    }
+
+    environment {
+        Hostname = 'selenium.host'
+    }
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    stages {
+        stage ('Stop') {
+            steps {
+                sh "docker container stop ${env.Hostname} || echo ok"
+                sh "docker container rm ${env.Hostname} || echo ok"
+            }
+        }
+
+        stage ('Run') {
+            steps {
+                sh "docker run -d -p 4444:4444 --network=ci.network --name ${env.Hostname} -v /dev/shm:/dev/shm -e SE_OPTS='-debug -enablePassThrough false' selenium/standalone-$Version"
+            }
+        }
+
+        stage ('Set Env')
+        {
+            steps {
+                sh "docker exec etcd.host etcdctl put /default/selenium/hostname ${env.Hostname}"
+                sh "docker exec etcd.host etcdctl get --prefix '/default'"
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
