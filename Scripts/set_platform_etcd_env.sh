@@ -62,7 +62,7 @@ $ETCDCTLCMD put $Prefix/elastic/indexalias sil_$Suffix $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/selenium/hostname 127.0.0.1 $ETCDENDPOINT
 
 # set symfony env
-$ETCDCTLCMD put $Prefix/symfony/env test $ETCDENDPOINT # maybe put this in env variable (or not)
+$ETCDCTLCMD put $Prefix/symfony/env prod $ETCDENDPOINT # maybe put this in env variable (or not)
 # not used on deploy, may be need for conf
 $ETCDCTLCMD put $Prefix/symfony/addr '127.0.0.1:8042' $ETCDENDPOINT
 
