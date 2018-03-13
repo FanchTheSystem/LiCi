@@ -18,7 +18,8 @@ ENV GROUP=users
 
 # Uid for system mount
 ARG UID=1004
-RUN useradd -d $HOME -g $GROUP -u ${UID} -m $USER
+ARG GID=100
+RUN useradd -d $HOME -g ${GID} -u ${UID} -m $USER
 
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 

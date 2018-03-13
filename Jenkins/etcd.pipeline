@@ -26,7 +26,7 @@ pipeline {
 
         stage ('Build') {
             steps {
-                sh "docker build --build-arg ETCDVER=${params.Version} -t etcd-img-${params.Version} -f Docker/etcd.dockerfile ."
+                sh "docker build --build-arg ETCDVER=${params.Version} --build-arg UID=`id -u` --build-arg GID=`id -g` -t etcd-img-${params.Version} -f Docker/etcd.dockerfile ."
             }
         }
 
