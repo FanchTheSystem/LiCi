@@ -33,7 +33,7 @@ pipeline {
 
         stage ('get Archive') {
             steps {
-                sh "docker exec -u jenkins:www-data apache-cnt-${params.phpVer} wget http://seti.libre-informatique.fr:8056/~jenkins/repo/E-venement/Eve_${params.Branch}.tar.gz -O ${env.DockerTarget}/${params.Branch}/Eve_${params.Branch}.tar.gz"
+                sh "docker exec -u jenkins:www-data apache-cnt-${params.phpVer} wget -q http://seti.libre-informatique.fr:8056/~jenkins/repo/E-venement/Eve_${params.Branch}.tar.gz -O ${env.DockerTarget}/${params.Branch}/Eve_${params.Branch}.tar.gz"
                 }
         }
 
