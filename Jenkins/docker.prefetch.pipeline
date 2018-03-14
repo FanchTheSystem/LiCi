@@ -8,13 +8,25 @@ pipeline {
     }
 
     stages {
-        stage ('Platform') {
+        stage ('Clone Platform') {
             steps {
                 sh 'git clone https://github.com/sil-project/Platform.git --depth 1'
+            }
+        }
+
+
+        stage ('Platform Docker') {
+            steps {
                 sh 'cd Platform/etc && docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t platform-img -f dockerfile.build.jenkins . && cd -'
+            }
+        }
+
+        stage ('Skeleton Docker') {
+            steps {
                 sh 'cd Platform/src/Skeleton/etc && docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t skeleton-img -f dockerfile.jenkins . && cd -'
             }
         }
+
 
         stage ('E-venement') {
             steps {
