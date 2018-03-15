@@ -31,8 +31,8 @@ pipeline {
             steps {
                 sh "docker exec -u root apache-cnt-${params.phpVer} service apache2 status"
                 /* todo : maybe remove user dir and use real apache vhost */
-                sh "docker exec -u root apache-cnt-${params.phpVer} mkdir -p ${env.DockerTarget}/${params.Name}"
-                sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}"
+                sh "docker exec -u jenkins:www-data apache-cnt-${params.phpVer} mkdir -p ${env.DockerTarget}/${params.Name}"
+                /*  sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}" */
 
             }
         }
@@ -47,9 +47,9 @@ pipeline {
             steps {
                 sh "Target=${env.Target} Branch=${params.Branch} Project=${params.Project} Name=${params.Name} Url=${params.apacheUrl} ./Scripts/deploy_platform_archive.sh"
                 /* todo : maybe remove user dir and use real apache vhost */
-                sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}"
+                /* sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}" */
                 /* todo : maybe remove user dir and use real apache vhost */
-                sh "docker exec -u root apache-cnt-${params.phpVer} chmod -R 775 ${env.DockerTarget}/${params.Name}"
+                sh "docker exec -u jenkins:www-data apache-cnt-${params.phpVer} chmod -R 775 ${env.DockerTarget}/${params.Name}"
             }
         }
 
