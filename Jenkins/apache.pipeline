@@ -8,7 +8,7 @@ pipeline {
     }
 
     environment {
-        apachePort = sh(returnStdout: true, script: "echo 8`echo ${#params.phpMod}|wc -l`${params.phpVersion} | sed -e s/'\\.'//g").trim()
+        apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod}|wc -l`${params.phpVersion} | sed -e s/'\\.'//g").trim()
         apacheUrl = 'seti.libre-informatique.fr'
      }
 
