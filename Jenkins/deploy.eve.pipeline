@@ -6,6 +6,7 @@ pipeline {
         string(defaultValue: 'E-venement', description: 'Project Name', name: 'Project')
         string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
         string(defaultValue: 'master', description: 'Name of the deploiement, may change the target directory or serveur', name: 'Name')
+        string(defaultValue: 'seti.libre-informatique.fr', description: 'Base Url', name: 'apacheUrl')
     }
 
     environment {
@@ -58,6 +59,17 @@ pipeline {
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-cnt-${params.phpVer} ./symfony cc"
             }
         }
+
+        stage ('Set Name and Description') {
+            steps {
+                script {
+                    currentBuild.displayName = "#${BUILD_NUMBER} Deploy Copy ${params.Project} (${params.Branch})"
+                    currentBuild.description = "<a href='http://${params.apacheUrl}:${env.apachePort}/~jenkins/${params.Project}/${params.Name}/web/sil'>Link To Instance</a>"
+                }
+            }
+        }
+
+
     }
     post {
         always {

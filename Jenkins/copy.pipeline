@@ -53,6 +53,14 @@ pipeline {
                 sh "ls -t ${params.Repo}| head -n3 # add a rm for file not in list"
             }
         }
+
+        stage ('Set Name') {
+            steps {
+                script {
+                    currentBuild.displayName = "#${BUILD_NUMBER} Copy ${params.Project} (${params.Branch})"
+                }
+            }
+        }
     }
     post {
         always {

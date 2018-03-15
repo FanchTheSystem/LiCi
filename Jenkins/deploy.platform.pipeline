@@ -6,7 +6,7 @@ pipeline {
         string(defaultValue: 'Platform', description: 'Project Name', name: 'Project')
         string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
         string(defaultValue: 'master', description: 'Name of the deploiement, may change the target directory or serveur', name: 'Name')
-        string(defaultValue: 'seti.libre-informatique.fr', description: 'Base Url', name: 'Hostname')
+        string(defaultValue: 'seti.libre-informatique.fr', description: 'Base Url', name: 'apacheUrl')
     }
 
     environment {
@@ -45,7 +45,7 @@ pipeline {
 
         stage ('Deploy Archive ') {
             steps {
-                sh "Target=${env.Target} Branch=${params.Branch} Project=${params.Project} Name=${params.Name} Url=${params.Hostname} ./Scripts/deploy_platform_archive.sh"
+                sh "Target=${env.Target} Branch=${params.Branch} Project=${params.Project} Name=${params.Name} Url=${params.apacheUrl} ./Scripts/deploy_platform_archive.sh"
                 /* todo : maybe remove user dir and use real apache vhost */
                 sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}"
                 /* todo : maybe remove user dir and use real apache vhost */
@@ -73,6 +73,17 @@ pipeline {
         }
 
         /* Todo add a step to handle database */
+
+        stage ('Set Name and Description') {
+            steps {
+                script {
+                    currentBuild.displayName = "#${BUILD_NUMBER} Deploy Copy ${params.Project} (${params.Branch})"
+                    currentBuild.description = "<a href='http://${params.apacheUrl}:${env.apachePort}/~jenkins/${params.Project}/${params.Name}/web/sil'>Link To Instance</a>"
+                }
+            }
+        }
+
+
     }
     post {
         always {

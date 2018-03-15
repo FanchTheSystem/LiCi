@@ -59,10 +59,10 @@ pipeline {
             }
         }
 
-        stage ('Set description') {
+        stage ('Set Name and Description') {
             steps {
                 script {
-                    currentBuild.displayName = "${BUILD_NUMBER} Apache/Php ${params.phpVersion}"
+                    currentBuild.displayName = "#${BUILD_NUMBER} Apache/Php ${params.phpVersion}"
                     currentBuild.description = "<a href='http://${env.apacheUrl}:${env.apachePort}/~jenkins/phpinfo.php'>Link To Php Info</a>"
                 }
             }
