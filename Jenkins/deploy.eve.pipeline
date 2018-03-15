@@ -11,7 +11,7 @@ pipeline {
     }
 
     environment {
-        apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod}|wc -l`${params.phpVersion} | sed -e s/'\\.'//g").trim()
+        apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod} | tr '-' ' ' | wc -w`${params.phpVersion} | sed -e s/'\\.'//g").trim()
         Target = "$HOME/public_html/${params.Project}"
         DockerTarget="/home/jenkins/public_html/${params.Project}"
     }

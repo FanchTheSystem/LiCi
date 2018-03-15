@@ -11,7 +11,7 @@ pipeline {
     }
 
     environment {
-        apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod}|wc -l`${params.phpVersion} | sed -e s/'\\.'//g").trim()
+        apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod}| tr '-' ' ' | wc -w`${params.phpVersion} | sed -e s/'\\.'//g").trim()
         Suffix = sh(returnStdout: true, script: "echo ${params.Branch} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
         Prefix = sh(returnStdout: true, script: "echo /${params.Project}/dev/${params.Branch} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
         Target = "$HOME/public_html/${params.Project}"

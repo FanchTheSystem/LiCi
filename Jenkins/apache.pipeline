@@ -8,7 +8,7 @@ pipeline {
     }
 
     environment {
-        apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod}|wc -l`${params.phpVersion} | sed -e s/'\\.'//g").trim()
+        apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod}| tr '-' ' ' | wc -w`${params.phpVersion} | sed -e s/'\\.'//g").trim()
         apacheUrl = 'seti.libre-informatique.fr'
      }
 
@@ -65,7 +65,7 @@ pipeline {
             steps {
                 script {
                     currentBuild.displayName = "#${BUILD_NUMBER} Apache/${params.phpMod} ${params.phpVersion}"
-                    currentBuild.description = "<a href='http://${env.apacheUrl}:${env.apachePort}/~jenkins/phpinfo.php'>Link To Php Info</a>"
+                    currentBuild.description = "<a href='http://${env.apacheUrl}:${env.apachePort}/phpinfo.php'>Link To Php Info</a>"
                 }
             }
         }
