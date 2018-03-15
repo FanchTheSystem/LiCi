@@ -27,7 +27,7 @@ RUN echo "deb http://ftp.debian.org/debian $(lsb_release -sc)-backports main" >>
 
 RUN a2enmod headers && a2enmod userdir && a2enmod rewrite
 RUN if [ "${PHPMOD}" = "php" ]; then a2dismod mpm_event && a2enmod mpm_prefork && a2enmod php${PHPVER}; fi
-RUN if [ "${PHPMOD}" = "php-fpm" ]; then a2enmod proxy_fcgi setenvif; a2dismod php7.1; a2enconf php7.1-fpm; fi
+RUN if [ "${PHPMOD}" = "php-fpm" ]; then a2enmod proxy_fcgi setenvif; a2dismod php${PHPVER}; a2enconf php${PHPVER}-fpm; fi
 
 RUN if [ "${PHPMOD}" = "php" ]; then echo "memory_limit=-1" >> /etc/php/${PHPVER}/apache2/conf.d/42-memory-limit.ini ; fi\
     && if [ "${PHPMOD}" = "php-fpm" ]; then echo "memory_limit=-1" >> /etc/php/${PHPVER}/fpm/conf.d/42-memory-limit.ini ; fi\
@@ -36,6 +36,12 @@ RUN if [ "${PHPMOD}" = "php" ]; then echo "memory_limit=-1" >> /etc/php/${PHPVER
 RUN apache2ctl configtest
 
 RUN echo '<?php phpinfo(); ?>' > /var/www/html/phpinfo.php && chmod 755 /var/www/html/phpinfo.php && chown www-data:www-data /var/www/html/phpinfo.php
+
+RUN echo /usr/sbin/service apache2 restart > /root/service_start.sh \
+    && if [ "${PHPMOD}" = "php-fpm" ]; then echo "/usr/sbin/service php${PHPVER}-fpm start" >> /root/service_start.sh; fi \
+    && echo "/bin/bash" >> /root/service_start.sh \
+    && chmod 755 /root/service_start.sh
+
 
 ENV HOME=/home/jenkins
 ENV USER=jenkins
@@ -54,8 +60,9 @@ RUN if [ "${PHPMOD}" = "php" ]; then sed -i -e s/'php_admin_flag engine Off'/'ph
 
 COPY Config/apache-config.conf /etc/apache2/mods-available/userdir.conf
 
+
 EXPOSE 80
-CMD /usr/sbin/service apache2 restart && if [ "${PHPMOD}" = "php-fpm" ]; then /usr/sbin/service php7.1-fpm start; fi && /bin/bash
+CMD /root/service_start.sh
 
 # warning it keep running because /bin/bash does not exit
 # to clean exit container "docker attach tst-cnt" and type "exit"
