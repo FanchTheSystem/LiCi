@@ -45,7 +45,7 @@ pipeline {
 
         stage ('Deploy Archive ') {
             steps {
-                sh "Target=${env.Target} Branch=${params.Branch} Name=${params.Project} Url=${params.Hostname} ./Scripts/deploy_platform_archive.sh"
+                sh "Target=${env.Target} Branch=${params.Branch} Project=${params.Project} Name=${params.Name} Url=${params.Hostname} ./Scripts/deploy_platform_archive.sh"
                 /* todo : maybe remove user dir and use real apache vhost */
                 sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}"
                 /* todo : maybe remove user dir and use real apache vhost */
