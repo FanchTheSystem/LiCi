@@ -8,7 +8,6 @@ pipeline {
     }
 
     stages {
-
         stage ('Purge') {
             steps {
                 sh "rm -rf $HOME/public_html $HOME/cache"
@@ -22,16 +21,16 @@ pipeline {
             }
         }
 
+        stage ('Default Php Info') {
+            steps {
+                sh "echo '<?php phpinfo(); ?>' > $HOME/public_html/phpinfo.php"
+            }
+        }
+
         stage ('Set Permission') {
             steps {
                 sh "chmod -R 755 $HOME/public_html $HOME/cache"
                 sh "chown -R jenkins:www-data $HOME/public_html"
-            }
-        }
-
-        stage ('Default Php Info') {
-            steps {
-                sh "echo '<?php phpinfo(); ?>' > $HOME/public_html/phpinfo.php"
             }
         }
     }
