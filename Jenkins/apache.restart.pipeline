@@ -3,11 +3,9 @@ pipeline {
 
     parameters {
         string(defaultValue: '7.1', description: 'Version of Php', name: 'phpVersion')
+         choice(choices: 'php\nphp-fpm', description: 'Mod Php', name: 'phpMod')
     }
 
-    environment {
-        apachePort = sh(returnStdout: true, script: "echo 80${params.phpVersion} | sed -e s/'\\.'//g").trim()
-     }
 
     options {
         timeout(time: 1, unit: 'HOURS')
@@ -18,13 +16,13 @@ pipeline {
     stages {
         stage ('Stop') {
             steps {
-                sh "docker exec -u root apache-cnt-${params.phpVersion} service apache2 stop"
+                sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVersion} service apache2 stop"
             }
         }
 
         stage ('Start') {
             steps {
-                sh "docker exec -u root apache-cnt-${params.phpVersion} service apache2 start"
+                sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVersion} service apache2 start"
             }
         }
     }

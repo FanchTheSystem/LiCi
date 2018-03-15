@@ -43,7 +43,7 @@ postgrespass=$($ETCDCTLCMD get /default/postgres/root/password --print-value-onl
 elastichost=$($ETCDCTLCMD get /default/elastic/hostname --print-value-only $ETCDENDPOINT)
 
 # get apache default (for php 7.1)
-apacheurl=$($ETCDCTLCMD get /default/apache/7.1/servername --print-value-only $ETCDENDPOINT)
+apacheurl=$($ETCDCTLCMD get /default/apache-php/7.1/servername --print-value-only $ETCDENDPOINT)
 
 # set postgres env
 $ETCDCTLCMD put $Prefix/postgres/hostname $postgreshost $ETCDENDPOINT

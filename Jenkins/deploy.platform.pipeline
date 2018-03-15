@@ -3,6 +3,7 @@ pipeline {
 
     parameters {
         string(defaultValue: '7.1', description: 'Version of Php', name: 'phpVer')
+        choice(choices: 'php\nphp-fpm', description: 'Mod Php', name: 'phpMod')
         string(defaultValue: 'Platform', description: 'Project Name', name: 'Project')
         string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
         string(defaultValue: 'master', description: 'Name of the deploiement, may change the target directory or serveur', name: 'Name')
@@ -10,7 +11,7 @@ pipeline {
     }
 
     environment {
-        apachePort = sh(returnStdout: true, script: "echo 80${params.phpVer} | sed -e s/'\\.'//g").trim()
+        apachePort = sh(returnStdout: true, script: "echo 8`echo ${#params.phpMod}|wc -l`${params.phpVersion} | sed -e s/'\\.'//g").trim()
         Suffix = sh(returnStdout: true, script: "echo ${params.Branch} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
         Prefix = sh(returnStdout: true, script: "echo /${params.Project}/dev/${params.Branch} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
         Target = "$HOME/public_html/${params.Project}"
@@ -29,10 +30,10 @@ pipeline {
 
         stage ('Check Apache') {
             steps {
-                sh "docker exec -u root apache-cnt-${params.phpVer} service apache2 status"
+                sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVer} service apache2 status"
                 /* todo : maybe remove user dir and use real apache vhost */
-                sh "docker exec -u jenkins:www-data apache-cnt-${params.phpVer} mkdir -p ${env.DockerTarget}/${params.Name}"
-                /*  sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}" */
+                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVer} mkdir -p ${env.DockerTarget}/${params.Name}"
+                /*  sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}" */
 
             }
         }
@@ -47,9 +48,9 @@ pipeline {
             steps {
                 sh "Target=${env.Target} Branch=${params.Branch} Project=${params.Project} Name=${params.Name} Url=${params.apacheUrl} sg www-data ./Scripts/deploy_platform_archive.sh"
                 /* todo : maybe remove user dir and use real apache vhost */
-                /* sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}" */
+                /* sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}" */
                 /* todo : maybe remove user dir and use real apache vhost */
-                sh "docker exec -u jenkins:www-data apache-cnt-${params.phpVer} chmod -R 775 ${env.DockerTarget}/${params.Name}"
+                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVer} chmod -R 775 ${env.DockerTarget}/${params.Name}"
             }
         }
 
@@ -62,13 +63,13 @@ pipeline {
         /* Todo should check if database exist in some kind of prod scripts*/
         stage ('Create Database') {
             steps {
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-cnt-${params.phpVer} bin/ci-scripts/set_pgpass_test.sh"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-cnt-${params.phpVer} bin/ci-scripts/create_database_test.sh"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-cnt-${params.phpVer} bin/console cache:clear --env=prod # May be Needed after parameter update"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-cnt-${params.phpVer} bin/ci-scripts/install_db_test.sh"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVer} bin/ci-scripts/set_pgpass_test.sh"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVer} bin/ci-scripts/create_database_test.sh"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVer} bin/console cache:clear --env=prod # May be Needed after parameter update"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVer} bin/ci-scripts/install_db_test.sh"
                 /* run a cache clear on env test to allow debug on deployed instance */
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-cnt-${params.phpVer} bin/console cache:clear --env=test"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-cnt-${params.phpVer} bin/console cache:clear --env=prod"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVer} bin/console cache:clear --env=test"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVer} bin/console cache:clear --env=prod"
            }
         }
 

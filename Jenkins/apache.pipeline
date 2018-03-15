@@ -3,10 +3,12 @@ pipeline {
 
     parameters {
         string(defaultValue: '7.1', description: 'Version of Php', name: 'phpVersion')
+        choice(choices: 'php\nphp-fpm', description: 'Mod Php', name: 'phpMod')
+        /* string(defaultValue: 'php', description: 'Mod Php', name: 'phpMod') */
     }
 
     environment {
-        apachePort = sh(returnStdout: true, script: "echo 80${params.phpVersion} | sed -e s/'\\.'//g").trim()
+        apachePort = sh(returnStdout: true, script: "echo 8`echo ${#params.phpMod}|wc -l`${params.phpVersion} | sed -e s/'\\.'//g").trim()
         apacheUrl = 'seti.libre-informatique.fr'
      }
 
@@ -25,36 +27,36 @@ pipeline {
 
         stage ('Stop') {
             steps {
-                sh "docker container stop apache-cnt-${params.phpVersion} || echo ok"
-                sh "docker container rm apache-cnt-${params.phpVersion} || echo ok"
+                sh "docker container stop apache-${params.phpMod}-cnt-${params.phpVersion} || echo ok"
+                sh "docker container rm apache-${params.phpMod}-cnt-${params.phpVersion} || echo ok"
             }
         }
 
         stage ('Build') {
             steps {
-                sh "docker build --build-arg PHPVER=${params.phpVersion} --build-arg UID=`id -u` --build-arg GID=`id -g` -t apache-img-${params.phpVersion} -f Docker/apache.dockerfile ."
+                sh "docker build --build-arg PHPMOD=${params.phpMod} --build-arg PHPVER=${params.phpVersion} --build-arg UID=`id -u` --build-arg GID=`id -g` -t apache-${params.phpMod}-img-${params.phpVersion} -f Docker/apache.dockerfile ."
             }
         }
 
         stage ('Run') {
             steps {
-                sh "docker run -dt -p ${env.apachePort}:80 --network=ci.network  --volume ${HOME}/public_html:/home/jenkins/public_html --name apache-cnt-${params.phpVersion} apache-img-${params.phpVersion}"
+                sh "docker run -dt -p ${env.apachePort}:80 --network=ci.network  --volume ${HOME}/public_html:/home/jenkins/public_html --name apache-${params.phpMod}-cnt-${params.phpVersion} apache-${params.phpMod}-img-${params.phpVersion}"
             }
         }
 
         stage ('Status') {
             steps {
                 sh "sleep 3 # wait apache restarting (in previous docker run)"
-                sh "docker exec -u root apache-cnt-${params.phpVersion} service apache2 status"
-                sh "docker exec apache-cnt-${params.phpVersion} php --version"
+                sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVersion} service apache2 status"
+                sh "docker exec apache-${params.phpMod}-cnt-${params.phpVersion} php --version"
             }
         }
 
         stage ('Set Env') {
             steps {
-                sh "docker exec etcd.host etcdctl put /default/apache/${params.phpVersion}/hostname apache-cnt-${params.phpVersion}"
-                sh "docker exec etcd.host etcdctl put /default/apache/${params.phpVersion}/port ${env.apachePort}"
-                sh "docker exec etcd.host etcdctl put /default/apache/${params.phpVersion}/servername ${env.apacheUrl}"
+                sh "docker exec etcd.host etcdctl put /default/apache-${params.phpMod}/${params.phpVersion}/hostname apache-${params.phpMod}-cnt-${params.phpVersion}"
+                sh "docker exec etcd.host etcdctl put /default/apache-${params.phpMod}/${params.phpVersion}/port ${env.apachePort}"
+                sh "docker exec etcd.host etcdctl put /default/apache-${params.phpMod}/${params.phpVersion}/servername ${env.apacheUrl}"
                 sh "docker exec etcd.host etcdctl get --prefix '/default'"
             }
         }
@@ -62,7 +64,7 @@ pipeline {
         stage ('Set Name and Description') {
             steps {
                 script {
-                    currentBuild.displayName = "#${BUILD_NUMBER} Apache/Php ${params.phpVersion}"
+                    currentBuild.displayName = "#${BUILD_NUMBER} Apache/${params.phpMod} ${params.phpVersion}"
                     currentBuild.description = "<a href='http://${env.apacheUrl}:${env.apachePort}/~jenkins/phpinfo.php'>Link To Php Info</a>"
                 }
             }
