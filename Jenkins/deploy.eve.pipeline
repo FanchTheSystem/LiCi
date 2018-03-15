@@ -5,6 +5,7 @@ pipeline {
         string(defaultValue: '5.6', description: 'Version of Php', name: 'phpVer')
         string(defaultValue: 'E-venement', description: 'Project Name', name: 'Project')
         string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
+        string(defaultValue: 'master', description: 'Name of the deploiement, may change the target directory or serveur', name: 'Name')
     }
 
     environment {
@@ -25,21 +26,21 @@ pipeline {
             steps {
                 sh "docker exec -u root apache-cnt-${params.phpVer} service apache2 status"
                 /* todo : maybe remove user dir and use real apache vhost */
-                sh "docker exec -u root apache-cnt-${params.phpVer} mkdir -p ${env.DockerTarget}/${params.Branch}"
-                sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Branch}"
+                sh "docker exec -u root apache-cnt-${params.phpVer} mkdir -p ${env.DockerTarget}/${params.Name}"
+                sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}"
 
             }
         }
 
         stage ('get Archive') {
             steps {
-                sh "docker exec -u jenkins:www-data apache-cnt-${params.phpVer} wget -q http://seti.libre-informatique.fr:8056/~jenkins/repo/E-venement/Eve_${params.Branch}.tar.gz -O ${env.DockerTarget}/${params.Branch}/Eve_${params.Branch}.tar.gz"
+                sh "docker exec -u jenkins:www-data apache-cnt-${params.phpVer} wget -q http://seti.libre-informatique.fr:8056/~jenkins/repo/E-venement/Eve_${params.Branch}.tar.gz -O ${env.DockerTarget}/${params.Name}/Eve_${params.Branch}.tar.gz"
                 }
         }
 
         stage ('Deploy Archive') {
             steps {
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} tar -xf Eve_${params.Branch}.tar.gz"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-cnt-${params.phpVer} tar -xf Eve_${params.Branch}.tar.gz"
             }
         }
 
@@ -47,14 +48,14 @@ pipeline {
         stage ('Set Owner and Right ') {
             steps {
                 /* todo : maybe remove user dir and use real apache vhost */
-                sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Branch}"
-                sh "docker exec -u root apache-cnt-${params.phpVer} chmod -R 775 ${env.DockerTarget}/${params.Branch}"
+                sh "docker exec -u root apache-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}"
+                sh "docker exec -u root apache-cnt-${params.phpVer} chmod -R 775 ${env.DockerTarget}/${params.Name}"
             }
         }
 
         stage ('Symfony cc') {
             steps {
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Branch}/ apache-cnt-${params.phpVer} ./symfony cc"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-cnt-${params.phpVer} ./symfony cc"
             }
         }
     }
