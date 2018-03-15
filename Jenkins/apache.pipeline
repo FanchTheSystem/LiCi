@@ -58,6 +58,16 @@ pipeline {
                 sh "docker exec etcd.host etcdctl get --prefix '/default'"
             }
         }
+
+        stage ('Set description') {
+            steps {
+                script {
+                    currentBuild.displayName = "${BUILD_NUMBER} Apache/Php ${params.phpVersion}"
+                    currentBuild.description = "<a href='http://${env.apacheUrl}:${env.apachePort}/~jenkins/phpinfo.php'>Link To Php Info</a>"
+                }
+            }
+        }
+
     }
 
     post {
