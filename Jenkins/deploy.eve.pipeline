@@ -64,7 +64,7 @@ pipeline {
             steps {
                 script {
                     currentBuild.displayName = "#${BUILD_NUMBER} Deploy Copy ${params.Project} (${params.Branch})"
-                    currentBuild.description = "<a href='http://${params.apacheUrl}:${env.apachePort}/~jenkins/${params.Project}/${params.Name}/web/sil'>Link To Instance</a>"
+                    currentBuild.description = "<a href='http://${params.apacheUrl}:${env.apachePort}/~jenkins/${params.Project}/${params.Name}/web'>Link To Instance</a>"
                 }
             }
         }
