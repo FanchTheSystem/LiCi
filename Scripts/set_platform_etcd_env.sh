@@ -7,11 +7,11 @@ export ETCDCTL_API=3
 
 if [ -z ${Suffix} ]
 then
-    if [ -z ${Branch} ]
+    if [ -z ${Name} ]
     then
-        Branch=master
+        Name=master
     fi
-    Suffix=$(echo $Branch|sed -e s/-/_/g|sed -e s/ //g|tr '[:upper:]' '[:lower:]')
+    Suffix=$(echo $Name|sed -e s/-/_/g|sed -e s/ //g|tr '[:upper:]' '[:lower:]')
 fi
 
 if [ -z ${Prefix} ]

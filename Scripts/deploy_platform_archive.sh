@@ -2,15 +2,21 @@
 set -ex
 
 # Name
-if [ -z ${Name} ]
+if [ -z ${Project} ]
 then
-    Name=Platform
+    Project=Platform
 fi
 
 # Branch
 if [ -z ${Branch} ]
 then
     Branch=master
+fi
+
+# Name
+if [ -z ${Name} ]
+then
+    Name=${Branch}
 fi
 
 # WorkDir
@@ -30,7 +36,7 @@ Target=$(pwd) #if previous workDir was a relative or symbolic path
 # Source
 if [ -z ${Source} ]
 then
-    Source=${HOME}/public_html/repo/${Name}
+    Source=${HOME}/public_html/repo/${Project}
 fi
 cd ${Source}
 Source=$(pwd) #if previous workDir was a relative or symbolic path
@@ -38,7 +44,7 @@ Source=$(pwd) #if previous workDir was a relative or symbolic path
 #Filename
 if [ -z ${Filename} ]
 then
-    Filename=${Name}_${Branch}.tar.gz
+    Filename=${Project}_${Branch}.tar.gz
 fi
 
 sha256sum -c ${Filename}.sha256.txt
@@ -49,7 +55,7 @@ cd ${workDir}
 tar -xf ${Filename}
 
 
-Target=${Target}/${Branch}
+Target=${Target}/${Name}
 
 # Todo, check if dir already exist or use a deploy tools
 #if [ -d ${Target} ]
