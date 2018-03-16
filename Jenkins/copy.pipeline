@@ -16,14 +16,14 @@ pipeline {
     }
 
     stages {
-        stage ('Param Check') {
+        stage ('Set Name') {
             steps {
-                sh "echo ${params.Job}"
-                sh "echo ${params.Project}"
-                sh "echo ${params.Branch}"
-                sh "echo ${params.Repo}"
+                script {
+                    currentBuild.displayName = "#${BUILD_NUMBER} Copy ${params.Project} (${params.Branch})"
+                }
             }
         }
+
         stage ('Prepare') {
             steps {
                 sh "mkdir -p ${params.Repo}/${params.Project}"
@@ -54,13 +54,6 @@ pipeline {
             }
         }
 
-        stage ('Set Name') {
-            steps {
-                script {
-                    currentBuild.displayName = "#${BUILD_NUMBER} Copy ${params.Project} (${params.Branch})"
-                }
-            }
-        }
     }
     post {
         always {

@@ -19,6 +19,15 @@ pipeline {
     }
 
     stages {
+        stage ('Set Name and Description') {
+            steps {
+                script {
+                    currentBuild.displayName = "#${BUILD_NUMBER} Apache/${params.phpMod} ${params.phpVersion}"
+                    currentBuild.description = "<a href='http://${env.apacheUrl}:${env.apachePort}/phpinfo.php'>Link To Php Info</a>"
+                }
+            }
+        }
+
         stage ('Prepare') {
             steps {
                 sh "mkdir -p ${HOME}/public_html"
@@ -58,15 +67,6 @@ pipeline {
                 sh "docker exec etcd.host etcdctl put /default/apache-${params.phpMod}/${params.phpVersion}/port ${env.apachePort}"
                 sh "docker exec etcd.host etcdctl put /default/apache-${params.phpMod}/${params.phpVersion}/servername ${env.apacheUrl}"
                 sh "docker exec etcd.host etcdctl get --prefix '/default'"
-            }
-        }
-
-        stage ('Set Name and Description') {
-            steps {
-                script {
-                    currentBuild.displayName = "#${BUILD_NUMBER} Apache/${params.phpMod} ${params.phpVersion}"
-                    currentBuild.description = "<a href='http://${env.apacheUrl}:${env.apachePort}/phpinfo.php'>Link To Php Info</a>"
-                }
             }
         }
 

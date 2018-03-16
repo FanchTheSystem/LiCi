@@ -27,8 +27,16 @@ pipeline {
     }
 
     stages {
+        stage ('Set Name and Description') {
+            steps {
+                script {
+                    currentBuild.displayName = "#${BUILD_NUMBER} Deploy: ${params.Branch}"
+                    currentBuild.description = "<a href='http://${params.apacheUrl}:${env.apachePort}/~jenkins/${params.Project}/${params.Name}/web/sil'>Link To Instance</a>"
+                }
+            }
+        }
 
-        stage ('Check Apache') {
+        stage ('Check & Prepare Apache') {
             steps {
                 sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVer} service apache2 status"
                 /* todo : maybe remove user dir and use real apache vhost */
@@ -70,19 +78,6 @@ pipeline {
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVer} bin/console cache:clear --env=prod"
            }
         }
-
-        /* Todo add a step to handle database */
-
-        stage ('Set Name and Description') {
-            steps {
-                script {
-                    currentBuild.displayName = "#${BUILD_NUMBER} Deploy ${params.Branch}"
-                    currentBuild.description = "<a href='http://${params.apacheUrl}:${env.apachePort}/~jenkins/${params.Project}/${params.Name}/web/sil'>Link To Instance</a>"
-                }
-            }
-        }
-
-
     }
     post {
         always {
