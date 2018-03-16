@@ -27,10 +27,7 @@ pipeline {
         stage ('Check Apache') {
             steps {
                 sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVer} service apache2 status"
-                /* todo : maybe remove user dir and use real apache vhost */
-                sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVer} mkdir -p ${env.DockerTarget}/${params.Name}"
-                sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}"
-
+                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVer} mkdir -p ${env.DockerTarget}/${params.Name}"
             }
         }
 
@@ -43,15 +40,7 @@ pipeline {
         stage ('Deploy Archive') {
             steps {
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVer} tar -xf Eve_${params.Branch}.tar.gz"
-            }
-        }
-
-
-        stage ('Set Owner and Right ') {
-            steps {
-                /* todo : maybe remove user dir and use real apache vhost */
-                sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVer} chown -R jenkins:www-data ${env.DockerTarget}/${params.Name}"
-                sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVer} chmod -R 775 ${env.DockerTarget}/${params.Name}"
+                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVer} chmod -R 775 ${env.DockerTarget}/${params.Name}"
             }
         }
 
