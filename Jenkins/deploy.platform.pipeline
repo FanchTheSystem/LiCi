@@ -41,8 +41,10 @@ pipeline {
                 sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVer} service apache2 status"
                 /* todo : maybe remove user dir and use real apache vhost */
                 sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVer} mkdir -p ${env.DockerTarget}/${params.Name}"
-                sh "docker exec -u root -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVer} rm -rf var/cache/* var/logs/*"
-            }
+                /* todo : should use user www-data to deploy */
+                sh "docker exec -u root -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVer} rm -rf var/cache/ var/logs/"
+                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVer} mkdir -p ${env.DockerTarget}/${params.Name}/cache ${env.DockerTarget}/${params.Name}/logs"
+                }
         }
 
         stage ('Prepare Env') {
