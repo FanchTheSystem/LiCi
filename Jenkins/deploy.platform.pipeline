@@ -77,7 +77,7 @@ pipeline {
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/console cache:clear --env=prod # May be Needed after parameter update"
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/install_db_test.sh"
                 /* run a cache clear on env test to allow debug on deployed instance */
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/console cache:clear --env=test"
+                /* sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/console cache:clear --env=test" */
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/console cache:clear --env=prod"
            }
         }
