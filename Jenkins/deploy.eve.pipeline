@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        string(defaultValue: '5.6', description: 'Version of Php', name: 'phpVer')
+        string(defaultValue: '5.6', description: 'Version of Php', name: 'phpVersion')
         choice(choices: 'php\nphp-fpm', description: 'Mod Php', name: 'phpMod')
         string(defaultValue: 'E-venement', description: 'Project Name', name: 'Project')
         string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
@@ -34,27 +34,27 @@ pipeline {
 
         stage ('Check & Prepare Apache') {
             steps {
-                sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVer} service apache2 status"
-                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVer} mkdir -p ${env.DockerTarget}/${params.Name}"
+                sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVersion} service apache2 status"
+                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} mkdir -p ${env.DockerTarget}/${params.Name}"
             }
         }
 
         stage ('get Archive') {
             steps {
-                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVer} wget -q http://seti.libre-informatique.fr:8156/~jenkins/repo/E-venement/Eve_${params.Branch}.tar.gz -O ${env.DockerTarget}/${params.Name}/Eve_${params.Branch}.tar.gz"
+                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} wget -q http://seti.libre-informatique.fr:8156/~jenkins/repo/E-venement/Eve_${params.Branch}.tar.gz -O ${env.DockerTarget}/${params.Name}/Eve_${params.Branch}.tar.gz"
                 }
         }
 
         stage ('Deploy Archive') {
             steps {
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVer} tar -xf Eve_${params.Branch}.tar.gz"
-                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVer} chmod -R 775 ${env.DockerTarget}/${params.Name}"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} tar -xf Eve_${params.Branch}.tar.gz"
+                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} chmod -R 775 ${env.DockerTarget}/${params.Name}"
             }
         }
 
         stage ('Symfony cc') {
             steps {
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVer} ./symfony cc"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} ./symfony cc"
             }
         }
     }
