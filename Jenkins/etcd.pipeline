@@ -9,11 +9,11 @@ pipeline {
         Hostname = 'etcd.host'
     }
 
-
     options {
         timeout(time: 1, unit: 'HOURS')
         timestamps()
         disableConcurrentBuilds()
+        ansiColor('xterm')
     }
 
     stages {
