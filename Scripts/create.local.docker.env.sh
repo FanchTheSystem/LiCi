@@ -22,6 +22,6 @@ export Version=6.1.1
 export Hostname=elastic.host
 run_pipeline_sh Jenkins/elastic.pipeline
 
-export Version=firefox:3.7.0-arsenic
-export Hostname=selenium.host
-run_pipeline_sh Jenkins/selenium.pipeline
+#export Version=firefox:3.7.0-arsenic
+#export Hostname=selenium.host
+#run_pipeline_sh Jenkins/selenium.pipeline
