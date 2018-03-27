@@ -9,6 +9,7 @@
 # $> run_pipeline_sh apache.pipeline
 
 show_pipeline_sh () {
+    echo "set -e"
     if [ -f $1 ]
     then
         cat $1 | grep -e '^\s\+sh' | sed -e s/'sh '/'echo '/ -e s/'{params\.'/'{'/g -e s/'{env\.'/'{'/g
