@@ -61,7 +61,7 @@ pipeline {
             cleanWs()
         }
         success {
-            build job: "Deploy ${params.Project}", parameters: [string(name: 'Project', value: "${params.Project}"), string(name: 'Branch', value: "${params.Branch}")], wait: false
+            build job: "Deploy ${params.Project}", parameters: [string(name: 'Project', value: "${params.Project}"), string(name: 'Branch', value: "${params.Branch}"), string(name: 'Name', value: "${params.Branch}")], wait: false
         }
     }
 }
