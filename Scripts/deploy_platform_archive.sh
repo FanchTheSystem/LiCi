@@ -63,6 +63,6 @@ Target=${Target}/${Name}
 #    mv ${Target} ${Target}$(date +'%Y%m%d%H%M%S')
 #fi
 mkdir -p ${Target}
-cp -rp ${workDir}/* ${Target}/
+cp -r ${workDir}/* ${Target}/
 
 rm -rf ${workDir}
