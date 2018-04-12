@@ -12,7 +12,7 @@ pipeline {
 
     environment {
         apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod}| tr '-' ' ' | wc -w`${params.phpVersion} | sed -e s/'\\.'//g").trim()
-        Suffix = sh(returnStdout: true, script: "echo ${params.Branch} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
+        Suffix = sh(returnStdout: true, script: "echo ${params.Name} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
         Prefix = sh(returnStdout: true, script: "echo /${params.Project}/dev/${params.Branch} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
         Target = "$HOME/public_html/${params.Project}"
         /* May not be the same as on host */
@@ -50,7 +50,7 @@ pipeline {
 
         stage ('Prepare Env') {
             steps {
-                sh " sg www-data ./Scripts/set_platform_etcd_env.sh"
+                sh "Project=${params.Project} Name=${params.Name} PhpVersion=${params.phpVersion} sg www-data ./Scripts/set_etcd_env.sh"
            }
         }
 
