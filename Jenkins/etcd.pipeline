@@ -51,9 +51,12 @@ pipeline {
 
         success {
             /* Warning: need 'Start Apache as job Name in Jenkins */
-            build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '5.6')], wait: false
-            build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '7.1')], wait: false
-            /*  build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '7.2')], wait: false */
+            build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '5.6'), string (name: 'phpMod', value: 'php')], wait: false
+            build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '7.1'), string (name: 'phpMod', value: 'php')], wait: false
+            build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '7.2'), string (name: 'phpMod', value: 'php')], wait: false
+            build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '5.6'), string (name: 'phpMod', value: 'php-fpm')], wait: false
+            build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '7.1'), string (name: 'phpMod', value: 'php-fpm')], wait: false
+            build job: 'Start Apache', parameters: [string(name: 'phpVersion', value: '7.2'), string (name: 'phpMod', value: 'php-fpm')], wait: false
             build job: 'Start Postgres', wait: false
             build job: 'Start Elastic', wait: false
             build job: 'Start Selenium', wait: false
