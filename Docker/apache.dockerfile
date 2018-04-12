@@ -48,8 +48,8 @@ ENV USER=jenkins
 ENV GROUP=users
 
 # Uid for system mount
-ARG UID=1004
-ARG GID=100
+ARG UID
+ARG GID
 RUN useradd -d $HOME -g ${GID} -u ${UID} -m $USER \
     && usermod -a -G www-data jenkins
 

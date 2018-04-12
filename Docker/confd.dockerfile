@@ -17,8 +17,8 @@ ENV USER=jenkins
 ENV GROUP=users
 
 # Uid for system mount
-ARG UID=1004
-ARG GID=100
+ARG UID
+ARG GID
 RUN useradd -d $HOME -g ${GID} -u ${UID} -m $USER
 
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
