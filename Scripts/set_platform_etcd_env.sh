@@ -16,7 +16,17 @@ fi
 
 if [ -z ${Prefix} ]
 then
-    Prefix="/platform/dev/"$Suffix
+    if [ -z ${Project} ]
+    then
+        Project=Platform
+    fi
+
+    Prefix=$Project/dev/$Suffix
+fi
+
+if [ -z $PhpVersion ]
+then
+    PhpVersion=7.1
 fi
 
 if [ -z "$ETCDHOST" ]
@@ -42,8 +52,8 @@ postgrespass=$($ETCDCTLCMD get /default/postgres/root/password --print-value-onl
 # get elastic default
 elastichost=$($ETCDCTLCMD get /default/elastic/hostname --print-value-only $ETCDENDPOINT)
 
-# get apache default (for php 7.1)
-apacheurl=$($ETCDCTLCMD get /default/apache-php/7.1/servername --print-value-only $ETCDENDPOINT)
+# get apache default (for php $PhpVersion)
+apacheurl=$($ETCDCTLCMD get /default/apache-php/$PhpVersion/servername --print-value-only $ETCDENDPOINT)
 
 # set postgres env
 $ETCDCTLCMD put $Prefix/postgres/hostname $postgreshost $ETCDENDPOINT
@@ -66,8 +76,7 @@ $ETCDCTLCMD put $Prefix/symfony/env prod $ETCDENDPOINT # maybe put this in env v
 # not used on deploy, may be need for conf
 $ETCDCTLCMD put $Prefix/symfony/addr '127.0.0.1:8042' $ETCDENDPOINT
 
+# Todo remove Channel Url as it is not used anymore (it have to be remove before in Sil Platform Project)
 $ETCDCTLCMD put $Prefix/sylius/channelurl $apacheurl $ETCDENDPOINT
 
 $ETCDCTLCMD get --prefix $Prefix $ETCDENDPOINT
-
-#confd -onetime -backend etcdv3 -node http://${ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix $Prefix
