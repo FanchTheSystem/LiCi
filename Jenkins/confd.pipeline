@@ -22,8 +22,7 @@ pipeline {
 
         stage ('Build') {
             steps {
-                /* --build-arg UID=`id -u` --build-arg GID=`id -g` */
-                sh "docker build --build-arg CONFDVER=${params.Version} -t confd-img-${params.Version} -f Docker/confd.dockerfile ."
+                sh "docker build --build-arg CONFDVER=${params.Version} --build-arg UID=`id -u` --build-arg GID=`id -g` -t confd-img-${params.Version} -f Docker/confd.dockerfile ."
             }
         }
 
