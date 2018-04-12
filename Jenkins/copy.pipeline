@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        string(defaultValue: 'Full Platform/master', description: 'Job Name', name: 'Job')
+        string(defaultValue: 'Platform/master', description: 'Job Name', name: 'Job')
         string(defaultValue: 'Platform', description: 'Project Name', name: 'Project')
         string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
         string(defaultValue: '$HOME/public_html/repo', description: 'Repository Directory', name: 'Repo')
