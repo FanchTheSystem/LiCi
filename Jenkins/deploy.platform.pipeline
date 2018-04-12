@@ -16,7 +16,7 @@ pipeline {
         Prefix = sh(returnStdout: true, script: "echo /${params.Project}/dev/${params.Branch} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
         Target = "$HOME/public_html/${params.Project}"
         /* May not be the same as on host */
-        DockerTarget="/home/jenkins/public_html/${params.Project}"
+        DockerTarget = "/home/jenkins/public_html/${params.Project}"
         ETCDHOST = 'etcd.host'
     }
 
