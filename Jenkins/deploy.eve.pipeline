@@ -12,8 +12,11 @@ pipeline {
 
     environment {
         apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod} | tr '-' ' ' | wc -w`${params.phpVersion} | sed -e s/'\\.'//g").trim()
+        Suffix = sh(returnStdout: true, script: "echo ${params.Name} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
+        Prefix = sh(returnStdout: true, script: "echo /${params.Project}/dev/${params.Branch} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
         Target = "$HOME/public_html/${params.Project}"
-        DockerTarget="/home/jenkins/public_html/${params.Project}"
+        DockerTarget = "/home/jenkins/public_html/${params.Project}"
+        ETCDHOST = 'etcd.host'
     }
 
     options {
@@ -40,7 +43,13 @@ pipeline {
             }
         }
 
-        stage ('get Archive') {
+        stage ('Prepare Env') {
+            steps {
+                sh "Project=${params.Project} Name=${params.Name} PhpVersion=${params.phpVersion} sg www-data ./Scripts/set_etcd_env.sh"
+            }
+        }
+
+        stage ('Get Archive') {
             steps {
                 sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} wget -q http://ci.libre-informatique.fr:8156/~jenkins/repo/E-venement/Eve_${params.Branch}.tar.gz -O ${env.DockerTarget}/${params.Name}/Eve_${params.Branch}.tar.gz"
                 }
@@ -53,11 +62,29 @@ pipeline {
             }
         }
 
+        stage ('Set Config File') {
+            steps {
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ confd.host confd -onetime -backend etcdv3 -node http://${env.ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix $Prefix"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/init_config.sh"
+            }
+        }
+
+        stage ('Create Database') {
+            steps {
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/set_pgpass_test.sh"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/create_database_test.sh"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/install_db_test.sh"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/load_fixture_test.sh"
+            }
+        }
+
         stage ('Symfony cc') {
             steps {
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} ./symfony cc"
             }
         }
+
+
     }
     post {
         always {
