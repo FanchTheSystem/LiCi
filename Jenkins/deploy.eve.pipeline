@@ -51,7 +51,7 @@ pipeline {
 
         stage ('Get Archive') {
             steps {
-                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} wget -q http://ci.libre-informatique.fr:8156/~jenkins/repo/E-venement/Eve_${params.Branch}.tar.gz -O ${env.DockerTarget}/${params.Name}/Eve_${params.Branch}.tar.gz"
+                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} wget -q http://ci.libre-informatique.fr:8156/~jenkins/repo/${params.Project}/${params.Project}_${params.Branch}.tar.gz -O ${env.DockerTarget}/${params.Name}/Eve_${params.Branch}.tar.gz"
                 }
         }
 
