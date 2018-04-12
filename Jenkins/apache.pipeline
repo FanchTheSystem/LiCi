@@ -9,7 +9,7 @@ pipeline {
 
     environment {
         apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod}| tr '-' ' ' | wc -w`${params.phpVersion} | sed -e s/'\\.'//g").trim()
-        apacheUrl = 'seti.libre-informatique.fr'
+        apacheUrl = 'ci.libre-informatique.fr'
      }
 
     options {

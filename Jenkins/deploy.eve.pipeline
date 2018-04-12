@@ -7,7 +7,7 @@ pipeline {
         string(defaultValue: 'E-venement', description: 'Project Name', name: 'Project')
         string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
         string(defaultValue: 'master', description: 'Name of the deploiement, may change the target directory or serveur', name: 'Name')
-        string(defaultValue: 'seti.libre-informatique.fr', description: 'Base Url', name: 'apacheUrl')
+        string(defaultValue: 'ci.libre-informatique.fr', description: 'Base Url', name: 'apacheUrl')
     }
 
     environment {
@@ -42,7 +42,7 @@ pipeline {
 
         stage ('get Archive') {
             steps {
-                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} wget -q http://seti.libre-informatique.fr:8156/~jenkins/repo/E-venement/Eve_${params.Branch}.tar.gz -O ${env.DockerTarget}/${params.Name}/Eve_${params.Branch}.tar.gz"
+                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} wget -q http://ci.libre-informatique.fr:8156/~jenkins/repo/E-venement/Eve_${params.Branch}.tar.gz -O ${env.DockerTarget}/${params.Name}/Eve_${params.Branch}.tar.gz"
                 }
         }
 

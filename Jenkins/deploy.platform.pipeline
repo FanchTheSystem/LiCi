@@ -7,7 +7,7 @@ pipeline {
         string(defaultValue: 'Platform', description: 'Project Name', name: 'Project')
         string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
         string(defaultValue: 'master', description: 'Name of the deploiement, may change the target directory or serveur', name: 'Name')
-        string(defaultValue: 'seti.libre-informatique.fr', description: 'Base Url', name: 'apacheUrl')
+        string(defaultValue: 'ci.libre-informatique.fr', description: 'Base Url', name: 'apacheUrl')
     }
 
     environment {
