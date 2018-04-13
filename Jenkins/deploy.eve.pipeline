@@ -73,8 +73,9 @@ pipeline {
 
         stage ('Set Config File') {
             steps {
+                sh "Target=${env.Target} Branch=${params.Branch} Project=${params.Project} Name=${params.Name} Url=${params.apacheUrl} sg www-data ./Scripts/apply_conf.sh"
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ confd.host confd -onetime -backend etcdv3 -node http://${env.ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix $Prefix"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/init_config.sh"
+                /* sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/init_config.sh" */
             }
         }
 
