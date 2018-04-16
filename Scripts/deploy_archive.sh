@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -ex
 
-# Name
 if [ -z ${Project} ]
 then
     Project=Platform
@@ -11,12 +10,6 @@ fi
 if [ -z ${Branch} ]
 then
     Branch=master
-fi
-
-# Name
-if [ -z ${Name} ]
-then
-    Name=${Branch}
 fi
 
 # WorkDir
@@ -54,8 +47,6 @@ cp ${Source}/${Filename} ${workDir}/
 cd ${workDir}
 tar -xf ${Filename}
 
-
-Target=${Target}/${Name}
 
 # Todo, check if dir already exist or use a deploy tools
 #if [ -d ${Target} ]

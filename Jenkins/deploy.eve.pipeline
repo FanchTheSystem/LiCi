@@ -5,8 +5,9 @@ pipeline {
         string(defaultValue: '5.6', description: 'Version of Php', name: 'phpVersion')
         choice(choices: 'php\nphp-fpm', description: 'Mod Php', name: 'phpMod')
         string(defaultValue: 'E-venement', description: 'Project Name', name: 'Project')
-        string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
-        string(defaultValue: 'master', description: 'Name of the deploiement, may change the target directory or serveur', name: 'Name')
+        string(defaultValue: 'master', description: 'Git  Branch Name', name: 'Branch')
+        string(defaultValue: 'eve-standard', description: 'Git Branch Name for configuration file', name: 'ConfBranch')
+        string(defaultValue: 'master', description: 'Name of the deploiement, will change the target directory or serveur', name: 'Name')
         string(defaultValue: 'ci.libre-informatique.fr', description: 'Base Url', name: 'apacheUrl')
     }
 
@@ -14,8 +15,8 @@ pipeline {
         apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod} | tr '-' ' ' | wc -w`${params.phpVersion} | sed -e s/'\\.'//g").trim()
         Suffix = sh(returnStdout: true, script: "echo ${params.Name} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
         Prefix = sh(returnStdout: true, script: "echo /${params.Project}/dev/${params.Branch} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
-        Target = "$HOME/public_html/${params.Project}"
-        DockerTarget = "/home/jenkins/public_html/${params.Project}"
+        Target = "$HOME/public_html/${params.Project}/${params.Name}"
+        DockerTarget = "/home/jenkins/public_html/${params.Project}/${params.Name}"
         ETCDHOST = 'etcd.host'
     }
 
@@ -51,46 +52,31 @@ pipeline {
 
         stage ('Deploy Archive ') {
             steps {
-                sh "Target=${env.Target} Branch=${params.Branch} Project=${params.Project} Name=${params.Name} Url=${params.apacheUrl} sg www-data ./Scripts/deploy_archive.sh"
+                sh "Target=${env.Target} Branch=${params.Branch} Project=${params.Project} sg www-data ./Scripts/deploy_archive.sh"
                 sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} chmod -R 775 ${env.DockerTarget}/${params.Name}"
             }
         }
-
-        /*
-        stage ('Get Archive') {
-            steps {
-                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} wget -q http://ci.libre-informatique.fr:8156/~jenkins/repo/${params.Project}/${params.Project}_${params.Branch}.tar.gz -O ${env.DockerTarget}/${params.Name}/Eve_${params.Branch}.tar.gz"
-                }
-        }
-
-        stage ('Deploy Archive') {
-            steps {
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} tar -xf Eve_${params.Branch}.tar.gz"
-                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} chmod -R 775 ${env.DockerTarget}/${params.Name}"
-            }
-        }
-        */
 
         stage ('Set Config File') {
             steps {
-                sh "Target=${env.Target} Branch=${params.Branch} Project=${params.Project} Name=${params.Name} Url=${params.apacheUrl} sg www-data ./Scripts/apply_conf.sh"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ confd.host confd -onetime -backend etcdv3 -node http://${env.ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix $Prefix"
-                /* sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/init_config.sh" */
+                sh "Target=${env.Target} Branch=${params.ConfBranch} sg www-data ./Scripts/apply_conf.sh"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ confd.host confd -onetime -backend etcdv3 -node http://${env.ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix $Prefix"
+                /* sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/init_config.sh" */
             }
         }
 
         stage ('Create Database') {
             steps {
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/set_pgpass_test.sh"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/create_database_test.sh"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/install_db_test.sh"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/load_fixture_test.sh"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/set_pgpass_test.sh"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/create_database_test.sh"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/install_db_test.sh"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/load_fixture_test.sh"
             }
         }
 
         stage ('Symfony cc') {
             steps {
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/${params.Name}/ apache-${params.phpMod}-cnt-${params.phpVersion} ./symfony cc"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} ./symfony cc"
             }
         }
 
