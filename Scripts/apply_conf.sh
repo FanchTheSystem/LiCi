@@ -22,7 +22,9 @@ workDir=$(pwd) #if previous workDir was a relative or symbolic path
 
 mkdir -p YmlConf/
 
-# need ssh key configured
+# need ssh key configured in ~/.ssh/config and host added to ~/.ssh/known_hosts
+# don't know why ~/.ssh/config is not read (maybe because home is a symlink ...)
+export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_gitea"
 git clone git@git.libre-informatique.fr:EvE/YmlConf.git -b ${Branch}
 
 cp -r YmlConf/* ${Target}/
