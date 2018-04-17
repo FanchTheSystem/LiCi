@@ -29,6 +29,13 @@ then
     PhpVersion=7.1
 fi
 
+if [ -z $ApacheTargetPath ]
+then
+    # todo : should use the server root or something else (or not)
+    ApacheTargetPath=/tmp
+fi
+
+
 if [ -z "$ETCDHOST" ]
 then
     ETCDHOST="etcd.host"
@@ -54,6 +61,9 @@ elastichost=$($ETCDCTLCMD get /default/elastic/hostname --print-value-only $ETCD
 
 # get apache default (for php $PhpVersion)
 apacheurl=$($ETCDCTLCMD get /default/apache-php/$PhpVersion/servername --print-value-only $ETCDENDPOINT)
+# apache target path
+$ETCDCTLCMD put $Prefix/apache/target/path $ApacheTargetPath $ETCDENDPOINT # maybe put this in env variable (or not)
+
 
 # set postgres env
 $ETCDCTLCMD put $Prefix/postgres/hostname $postgreshost $ETCDENDPOINT
@@ -75,6 +85,7 @@ $ETCDCTLCMD put $Prefix/selenium/hostname 127.0.0.1 $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/symfony/env prod $ETCDENDPOINT # maybe put this in env variable (or not)
 # not used on deploy, may be need for conf
 $ETCDCTLCMD put $Prefix/symfony/addr '127.0.0.1:8042' $ETCDENDPOINT
+
 
 # Todo remove Channel Url as it is not used anymore (it have to be remove before in Sil Platform Project)
 $ETCDCTLCMD put $Prefix/sylius/channelurl $apacheurl $ETCDENDPOINT
