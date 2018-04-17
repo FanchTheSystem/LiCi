@@ -14,7 +14,7 @@ pipeline {
     environment {
         apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod} | tr '-' ' ' | wc -w`${params.phpVersion} | sed -e s/'\\.'//g").trim()
         Suffix = sh(returnStdout: true, script: "echo ${params.Name} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
-        Prefix = sh(returnStdout: true, script: "echo /${params.Project}/dev/${params.Branch} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
+        Prefix = sh(returnStdout: true, script: "echo /${params.Project}/${params.Name}/${params.Branch} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
         Target = "$HOME/public_html/${params.Project}/${params.Name}"
         DockerTarget = "/home/jenkins/public_html/${params.Project}/${params.Name}"
         ETCDHOST = 'etcd.host'
@@ -31,7 +31,7 @@ pipeline {
         stage ('Set Name and Description') {
             steps {
                 script {
-                    currentBuild.displayName = "#${BUILD_NUMBER} Deploy: ${params.Branch} With ${params.phpMod}/${params.phpVersion}"
+                    currentBuild.displayName = "#${BUILD_NUMBER} Deploy: ${params.Branch} (${params.ConfBranch})  With ${params.phpMod}/${params.phpVersion}"
                     currentBuild.description = "<a href='http://${params.apacheUrl}:${env.apachePort}/~jenkins/${params.Project}/${params.Name}/web'>Link To Instance</a>"
                 }
             }
@@ -46,7 +46,7 @@ pipeline {
 
         stage ('Prepare Env') {
             steps {
-                sh "Project=${params.Project} Name=${params.Name} PhpVersion=${params.phpVersion} sg www-data ./Scripts/set_etcd_env.sh"
+                sh "Project=${params.Project} Name=${params.Name} PhpVersion=${params.phpVersion} Prefix=${env.Prefix} sg www-data ./Scripts/set_etcd_env.sh"
             }
         }
 
@@ -60,7 +60,7 @@ pipeline {
         stage ('Set Config File') {
             steps {
                 sh "Target=${env.Target} Branch=${params.ConfBranch} sg www-data ./Scripts/apply_conf.sh"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ confd.host confd -onetime -backend etcdv3 -node http://${env.ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix $Prefix"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ confd.host confd -onetime -backend etcdv3 -node http://${env.ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix  ${env.Prefix}"
                 /* sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/init_config.sh" */
             }
         }
