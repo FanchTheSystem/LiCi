@@ -63,6 +63,7 @@ elastichost=$($ETCDCTLCMD get /default/elastic/hostname --print-value-only $ETCD
 apacheurl=$($ETCDCTLCMD get /default/apache-php/$PhpVersion/servername --print-value-only $ETCDENDPOINT)
 # apache target path
 $ETCDCTLCMD put $Prefix/apache/target/path $ApacheTargetPath $ETCDENDPOINT # maybe put this in env variable (or not)
+# todo: should get this path from etcd in other script like deploy or apply config
 
 
 # set postgres env
