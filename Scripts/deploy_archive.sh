@@ -40,7 +40,8 @@ then
     Filename=${Project}_${Branch}.tar.gz
 fi
 
-sha256sum -c ${Filename}.sha256.txt
+# todo: re-enable (or not)
+#sha256sum -c ${Filename}.sha256.txt
 
 cp ${Source}/${Filename} ${workDir}/
 
