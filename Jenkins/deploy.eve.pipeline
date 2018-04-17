@@ -15,8 +15,8 @@ pipeline {
         apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod} | tr '-' ' ' | wc -w`${params.phpVersion} | sed -e s/'\\.'//g").trim()
         Suffix = sh(returnStdout: true, script: "echo ${params.Name} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
         Prefix = sh(returnStdout: true, script: "echo /${params.Project}/${params.Name}/${params.Branch} |sed -e s/-/_/g|tr '[:upper:]' '[:lower:]'").trim()
-        Target = "$HOME/public_html/${params.Project}/${params.Name}"
-        DockerTarget = "/home/jenkins/public_html/${params.Project}/${params.Name}"
+        Target = "$HOME/public_html/${params.Project}/${params.Branch}/${params.Name}"
+        DockerTarget = "/home/jenkins/public_html/${params.Project}/${params.Branch}/${params.Name}"
         ETCDHOST = 'etcd.host'
     }
 
@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     currentBuild.displayName = "#${BUILD_NUMBER} Deploy: ${params.Branch} (${params.ConfBranch})  With ${params.phpMod}/${params.phpVersion}"
-                    currentBuild.description = "<a href='http://${params.apacheUrl}:${env.apachePort}/~jenkins/${params.Project}/${params.Name}/web'>Link To Instance</a>"
+                    currentBuild.description = "<a href='http://${params.apacheUrl}:${env.apachePort}/~jenkins/${params.Project}/${params.Branch}/${params.Name}/web'>Link To Instance</a>"
                 }
             }
         }
@@ -40,7 +40,7 @@ pipeline {
         stage ('Check & Prepare Apache') {
             steps {
                 sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVersion} service apache2 status"
-                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} mkdir -p ${env.DockerTarget}/${params.Name}"
+                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} mkdir -p ${env.DockerTarget}"
             }
         }
 
@@ -53,7 +53,7 @@ pipeline {
         stage ('Deploy Archive ') {
             steps {
                 sh "Target=${env.Target} Branch=${params.Branch} Project=${params.Project} sg www-data ./Scripts/deploy_archive.sh"
-                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} chmod -R 775 ${env.DockerTarget}/${params.Name}"
+                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} chmod -R 775 ${env.DockerTarget}/"
             }
         }
 
