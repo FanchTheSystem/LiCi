@@ -1,9 +1,30 @@
 pipeline {
     agent any
     parameters {
-        /* choice(choices: 'dark\nmedium\nsoft', description: 'Css Theme', name: 'theme') */
-        /* choice(choices: 'list\ngrid\nsection_grid', description: 'Css Layout', name: 'layout') */
+        choice(choices: 'dark\nmedium\nsoft', description: 'Css Theme', name: 'Theme')
+        choice(choices: 'list\ngrid\nsection_grid', description: 'Css Layout', name: 'Layout')
         choice(choices: 'wip-ci-debug\nmaster\nv2.10\nv2.12', description: 'Source Branch', name: 'Branch')
+
+        string(defaultValue: '', description: 'About Adress', name: 'AboutAddress')
+        string(defaultValue: '', description: 'About Country', name: 'AboutCountry')
+        string(defaultValue: '', description: 'About Logo', name: 'AboutLogo')
+        string(defaultValue: '', description: 'About Name', name: 'AboutName')
+        string(defaultValue: '', description: 'About WebSite', name: 'AboutWebsite')
+
+        string(defaultValue: '', description: 'Seller Address', name: 'SellerAddress')
+        string(defaultValue: '', description: 'Seller City', name: 'SellerCity')
+        string(defaultValue: '', description: 'Seller Country', name: 'SellerCountry')
+        string(defaultValue: '', description: 'Seller Logo', name: 'SellerLogo')
+        string(defaultValue: '', description: 'Seller Name', name: 'SellerName')
+        string(defaultValue: '', description: 'Seller Postal Code', name: 'SellerPostalCode')
+
+        /* To add or not to add */
+        /* /eve/cards/extra
+           /eve/eticketting/salt
+           /eve/informations/title
+           /eve/texts/email_confirmation
+           /eve/tickets/licences */
+
         string(defaultValue: 'eve-starter', description: 'Name of the deploiement, will change the target directory or serveur', name: 'Name')
     }
 
