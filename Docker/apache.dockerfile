@@ -50,8 +50,8 @@ ENV GROUP=users
 # Uid for system mount
 ARG UID
 ARG GID
-RUN useradd -d $HOME -g ${GID} -u ${UID} -m $USER \
-    && usermod -a -G www-data jenkins
+RUN useradd -d $HOME -g ${GID} -u ${UID} -m ${USER} -s /bin/bash \
+    && usermod -a -G www-data ${USER}
 
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
