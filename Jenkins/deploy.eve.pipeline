@@ -31,7 +31,7 @@ pipeline {
         stage ('Set Name and Description') {
             steps {
                 script {
-                    currentBuild.displayName = "#${BUILD_NUMBER} Deploy: ${params.Branch} (${params.ConfBranch})  With ${params.phpMod}/${params.phpVersion}"
+                    currentBuild.displayName = "#${BUILD_NUMBER} Deploy: ${params.Branch} (${params.ConfBranch}) With ${params.phpMod}/${params.phpVersion}"
                     currentBuild.description = "<a href='http://${params.apacheUrl}:${env.apachePort}/~jenkins/${params.Project}/${params.Branch}/${params.Name}/web'>Link To Instance</a>"
                 }
             }
