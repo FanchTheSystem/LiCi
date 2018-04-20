@@ -3,7 +3,7 @@ pipeline {
     parameters {
         /* choice(choices: 'dark\nmedium\nsoft', description: 'Css Theme', name: 'theme') */
         /* choice(choices: 'list\ngrid\nsection_grid', description: 'Css Layout', name: 'layout') */
-        choice(choices: 'wip-ci-debug\nmaster\nv2.10\nv2.12', description: 'Css Layout', name: 'layout')
+        choice(choices: 'wip-ci-debug\nmaster\nv2.10\nv2.12', description: 'Source Branch', name: 'Branch')
         string(defaultValue: 'eve-starter', description: 'Name of the deploiement, will change the target directory or serveur', name: 'Name')
     }
 
