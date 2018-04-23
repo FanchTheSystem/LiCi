@@ -5,6 +5,8 @@ pipeline {
         choice(choices: 'list\ngrid\nsection_grid', description: 'Css Layout', name: 'Layout')
         choice(choices: 'wip-ci-debug\nmaster\nv2.10\nv2.12', description: 'Source Branch', name: 'Branch')
 
+        /* should be in yml file in specific branch */
+        /*
         string(defaultValue: '', description: 'About Adress', name: 'AboutAddress')
         string(defaultValue: '', description: 'About Country', name: 'AboutCountry')
         string(defaultValue: '', description: 'About Logo', name: 'AboutLogo')
@@ -17,6 +19,7 @@ pipeline {
         string(defaultValue: '', description: 'Seller Logo', name: 'SellerLogo')
         string(defaultValue: '', description: 'Seller Name', name: 'SellerName')
         string(defaultValue: '', description: 'Seller Postal Code', name: 'SellerPostalCode')
+        */
 
         /* To add or not to add */
         /* /eve/cards/extra
