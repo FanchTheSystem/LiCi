@@ -26,10 +26,16 @@ mkdir -p ${Target}
 cd ${Target}
 Target=$(pwd) #if previous workDir was a relative or symbolic path
 
+
+if [ -z ${LIREPOPATH} ]
+then
+    LIREPOPATH=/tmp
+fi
+
 # Source
 if [ -z ${Source} ]
 then
-    Source=${HOME}/public_html/repo/${Project}
+    Source=${LIREPOPATH}/${Project}
 fi
 cd ${Source}
 Source=$(pwd) #if previous workDir was a relative or symbolic path
