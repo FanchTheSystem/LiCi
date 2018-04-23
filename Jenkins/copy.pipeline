@@ -5,7 +5,8 @@ pipeline {
         string(defaultValue: 'Platform/master', description: 'Job Name', name: 'Job')
         string(defaultValue: 'Platform', description: 'Project Name', name: 'Project')
         string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
-        string(defaultValue: '$HOME/public_html/repo', description: 'Repository Directory', name: 'Repo')
+        /* warning need LIREPOPATH set on jenkins host */
+        string(defaultValue: '${LIREPOPATH}/public', description: 'Repository Directory', name: 'Repo')
 
     }
 
@@ -44,7 +45,7 @@ pipeline {
 
         stage('Copy To Repo') {
             steps {
-                sh  "cp -rp ./Artifact/* ${params.Repo}/${params.Project}/"
+                sh  "sg www-data cp -rp ./Artifact/* ${params.Repo}/${params.Project}/"
             }
         }
 
