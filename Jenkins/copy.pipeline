@@ -45,7 +45,7 @@ pipeline {
 
         stage('Copy To Repo') {
             steps {
-                sh  "sg www-data cp -rp ./Artifact/* ${params.Repo}/${params.Project}/"
+                sh  "sg www-data 'cp -r ./Artifact/* ${params.Repo}/${params.Project}/'"
             }
         }
 
