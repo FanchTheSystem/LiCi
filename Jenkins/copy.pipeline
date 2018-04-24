@@ -7,7 +7,7 @@ pipeline {
         string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
         /* warning need LIREPOPATH set on jenkins host */
         string(defaultValue: '${LIREPOPATH}/public', description: 'Repository Directory', name: 'Repo')
-
+        choice(choices: 'false\ntrue', description: '', name: 'DoDeploy')
     }
 
     options {
@@ -56,13 +56,23 @@ pipeline {
             }
         }
 
+        stage ('Deploy') {
+            when {
+                // Only say hello if a "greeting" is requested
+                expression { params.DoDeploy == 'true' }
+            }
+
+            steps {
+                build job: "Deploy ${params.Project}", parameters: [string(name: 'Project', value: "${params.Project}"), string(name: 'Branch', value: "${params.Branch}"), string(name: 'Name', value: "${params.Branch}")], wait: false
+            }
+        }
+
+
     }
+
     post {
         always {
             cleanWs()
-        }
-        success {
-            build job: "Deploy ${params.Project}", parameters: [string(name: 'Project', value: "${params.Project}"), string(name: 'Branch', value: "${params.Branch}"), string(name: 'Name', value: "${params.Branch}")], wait: false
         }
     }
 }
