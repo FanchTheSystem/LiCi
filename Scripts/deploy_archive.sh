@@ -35,7 +35,7 @@ fi
 # Source
 if [ -z ${Source} ]
 then
-    Source=${LIREPOPATH}/${Project}
+    Source=${LIREPOPATH}/public/${Project}
 fi
 cd ${Source}
 Source=$(pwd) #if previous workDir was a relative or symbolic path
