@@ -44,7 +44,7 @@ pipeline {
 
         stage ('Deploy Eve') {
             steps {
-                build job: "Deploy E-venement", parameters: [string(name: 'Project', value: 'E-venement'), string(name: 'Branch', value: "${params.Branch}"), string(name: 'Name', value: "${params.Name}"), string(name: 'ConfBranch', value: 'eve-starter'), ], wait: true
+                build job: "Deploy E-venement", parameters: [string(name: 'Project', value: 'E-venement'), string(name: 'Branch', value: "${params.Branch}"), string(name: 'Name', value: "${params.Name}"), string(name: 'ConfBranch', value: 'eve-starter'), string(name: 'CreateArchive', value: "true") ], wait: true
             }
         }
     }
