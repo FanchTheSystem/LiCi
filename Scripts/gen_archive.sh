@@ -22,20 +22,19 @@ then
 fi
 
 # Source
-if [ -z ${Target} ]
+if [ -z ${TargetRepo} ]
 then
-    Target=${LIREPOPATH}/private/${Project}
+    TargetRepo=${LIREPOPATH}/private/${Project}
 fi
-mkdir -p ${Target}
-cd ${Target}
-Target=$(pwd) #if previous workDir was a relative or symbolic path
+mkdir -p ${TargetRepo}
+cd ${TargetRepo}
+TargetRepo=$(pwd) #if previous workDir was a relative or symbolic path
 
-# Target
-if [ -d ${Source} ]
+if [ -z "${Source}" -a -d "${Source}" ]
 then
     cd ${Source}
 
-    Filename=${Target}/${Project}_${Name}_${Branch}.tar.gz
+    Filename=${TargetRepo}/${Project}_${Name}_${Branch}.tar.gz
 
     rm -f ${Filename}
 
