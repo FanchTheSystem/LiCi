@@ -30,7 +30,7 @@ mkdir -p ${TargetRepo}
 cd ${TargetRepo}
 TargetRepo=$(pwd) #if previous workDir was a relative or symbolic path
 
-if [ -z "${Source}" -a -d "${Source}" ]
+if [ -n "${Source}" -a -d "${Source}" ]
 then
     cd ${Source}
 
