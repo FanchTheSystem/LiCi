@@ -9,7 +9,8 @@ pipeline {
         string(defaultValue: 'eve-standard', description: 'Git Branch Name for configuration file', name: 'ConfBranch')
         string(defaultValue: 'master', description: 'Name of the deploiement, will change the target directory or serveur', name: 'Name')
         string(defaultValue: 'ci.libre-informatique.fr', description: 'Base Url', name: 'apacheUrl')
-    }
+        choice(choices: 'false\ntrue', description: '', name: 'CreateArchive')
+     }
 
     environment {
         apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod} | tr '-' ' ' | wc -w`${params.phpVersion} | sed -e s/'\\.'//g").trim()
@@ -81,6 +82,10 @@ pipeline {
         }
 
         stage ('Archive Gzip') {
+            when {
+                expression { params.CreateArchive == 'true' }
+            }
+
             steps {
                 sh "Source=${env.Target} Project=${params.Project} Branch=${params.Branch}_${params.ConfBranch} Name=${params.Name} sg www-data ./Scripts/gen_archive.sh"
             }

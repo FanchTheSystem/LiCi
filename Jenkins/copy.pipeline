@@ -58,7 +58,6 @@ pipeline {
 
         stage ('Deploy') {
             when {
-                // Only say hello if a "greeting" is requested
                 expression { params.DoDeploy == 'true' }
             }
 
