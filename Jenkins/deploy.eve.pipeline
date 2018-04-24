@@ -82,7 +82,7 @@ pipeline {
 
         stage ('Archive Gzip') {
             steps {
-                sh 'Project=${params.Project} Branch=${params.Branch} Name=${params.Name} ./bin/ci-scripts/do_run.sh gen_archive.sh'
+                sh 'Project=${params.Project} Branch=${params.Branch} Name=${params.Name} ./Scripts/gen_archive.sh'
             }
         }
 
