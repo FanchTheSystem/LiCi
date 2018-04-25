@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+    parameters {
+
+        string(defaultValue: 'eve-starter', description: 'Name of the configuration (used to create git branch)', name: 'Name')
+
+        choice(choices: 'dark\nmedium\nsoft', description: 'Css Theme', name: 'Theme')
+        choice(choices: 'list\ngrid\nsection_grid', description: 'Css Layout', name: 'Layout')
+
+        string(defaultValue: '', description: 'About Adress', name: 'AboutAddress')
+        string(defaultValue: '', description: 'About Country', name: 'AboutCountry')
+        string(defaultValue: '../private/images/logo.png', description: 'About Logo', name: 'AboutLogo')
+        string(defaultValue: '', description: 'About Name', name: 'AboutName')
+        string(defaultValue: '', description: 'About WebSite', name: 'AboutWebsite')
+
+        string(defaultValue: '', description: 'Seller Address', name: 'SellerAddress')
+        string(defaultValue: '', description: 'Seller City', name: 'SellerCity')
+        string(defaultValue: '', description: 'Seller Country', name: 'SellerCountry')
+        string(defaultValue: '../private/images/logo.png', description: 'Seller Logo', name: 'SellerLogo')
+        string(defaultValue: '', description: 'Seller Name', name: 'SellerName')
+        string(defaultValue: '', description: 'Seller Postal Code', name: 'SellerPostalCode')
+
+        string(defaultValue: '', description: 'Cards Extra (Information Print on Card)', name: 'CardsExtra')
+        string(defaultValue: '', description: 'Ticket Salt (Empty for random)', name: 'EtickettingSalt')
+        string(defaultValue: '', description: 'Page Information Title (May be the same as About Name)', name: 'InformationsTitle')
+
+        string(defaultValue: '', description: 'Text for Sent Email (May be with some %%COMMAND%% or %%DATE%%)', name: 'TextsEmailConfirmation')
+
+        choice(choices: '350970\n350971\n350972', description: 'Tickets Licence', name: 'TicketsLicences')
+
+
+        /* To add or not to add */
+           /eve/informations/title
+           /eve/texts/email_confirmation
+           /eve/tickets/licences */
+
+
+    }
+
+    stages {
+
+        stage ('Check Branch') {
+            steps {
+                sh "NewBranch=${params.Name} ./Scripts/check_if_conf_branch_exist.sh"
+            }
+        }
+
+    }
+}
