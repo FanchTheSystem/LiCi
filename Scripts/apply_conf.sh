@@ -8,7 +8,7 @@ then
 fi
 mkdir -p ${Target}
 cd ${Target}
-Target=$(pwd) #if previous workDir was a relative or symbolic path
+Target=$(pwd) #if previous dir was a relative or symbolic path
 
 # Branch
 if [ -z ${Branch} ]
@@ -18,7 +18,7 @@ fi
 
 workDir=$(mktemp -d)
 cd ${workDir}
-workDir=$(pwd) #if previous workDir was a relative or symbolic path
+workDir=$(pwd)
 
 mkdir -p YmlConf/
 

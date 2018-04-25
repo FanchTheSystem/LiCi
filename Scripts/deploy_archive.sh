@@ -15,7 +15,6 @@ fi
 # WorkDir
 workDir=$(mktemp -d) #mkdir ${workDir}
 cd ${workDir}
-workDir=$(pwd) #if previous workDir was a relative or symbolic path
 
 # Target
 if [ -z ${Target} ]
@@ -24,7 +23,7 @@ then
 fi
 mkdir -p ${Target}
 cd ${Target}
-Target=$(pwd) #if previous workDir was a relative or symbolic path
+Target=$(pwd) #if previous dir was a relative or symbolic path
 
 
 if [ -z ${LIREPOPATH} ]
@@ -38,7 +37,7 @@ then
     Source=${LIREPOPATH}/public/${Project}
 fi
 cd ${Source}
-Source=$(pwd) #if previous workDir was a relative or symbolic path
+Source=$(pwd) #if previous dir was a relative or symbolic path
 
 #Filename
 if [ -z ${Filename} ]
