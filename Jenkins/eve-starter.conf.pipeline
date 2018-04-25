@@ -29,12 +29,6 @@ pipeline {
         choice(choices: '350970\n350971\n350972', description: 'Tickets Licence', name: 'TicketsLicences')
 
 
-        /* To add or not to add */
-           /eve/informations/title
-           /eve/texts/email_confirmation
-           /eve/tickets/licences */
-
-
     }
 
     stages {
