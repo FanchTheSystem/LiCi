@@ -39,5 +39,11 @@ pipeline {
             }
         }
 
+        stage ('Generate Configuration') {
+            steps {
+                sh "NewBranch=${params.Name} ./Scripts/gen_conf_eve_starter.sh"
+            }
+        }
+
     }
 }
