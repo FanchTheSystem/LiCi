@@ -11,7 +11,7 @@ fi
 
 if [ -z "$CONFDHOST" ]
 then
-    ETCDHOST="confd.host"
+    CONFDHOST="confd.host"
 fi
 
 if [ -z "$ETCDHOST" ]
