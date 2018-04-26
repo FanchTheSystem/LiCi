@@ -28,6 +28,15 @@ pipeline {
 
         choice(choices: '350970\n350971\n350972', description: 'Tickets Licence', name: 'TicketsLicences')
 
+        string(defaultValue: '42', description: 'Default Password for all user (may be finer later)', name: 'UserPassword')
+
+        string(defaultValue: '1', description: 'PayBox Id', name: 'PayboxId')
+        string(defaultValue: '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF', description: 'PayBox Key', name: 'PayboxKey')
+        string(defaultValue: '32', description: 'PayBox Rank', name: 'PayboxRank')
+        string(defaultValue: '1999888', description: 'PayBox Site', name: 'PayboxSite')
+
+        string(defaultValue: '[https://preprod-tpeweb.paybox.com/, https://preprod-tpeweb1.paybox.com/]', description: 'PayBox Url', name: 'PayboxUrl')
+        string(defaultValue: 'cgi/MYchoix_pagepaiement.cgi', description: 'PayBox Uri', name: 'PayboxUri')
 
     }
 

@@ -17,7 +17,6 @@ cd ${workDir}
 workDir=$(pwd)
 
 
-
 # need ssh key configured in ~/.ssh/config and host added to ~/.ssh/known_hosts
 # don't know why ~/.ssh/config is not read (maybe because home is a symlink ...)
 export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_gitea"
@@ -27,9 +26,6 @@ cd YmlConf
 # Should have run check_if_conf_branch_exist.sh before this !
 git checkout -b ${NewBranch}
 
-
-
-
 # Default eve-starter value
 
 if [ -z ${AboutAddress} ]
@@ -38,78 +34,133 @@ then
 RM12 4EN Hornchurch
 England'
 fi
+
 if [ -z ${AboutCountry} ]
 then
     AboutCountry='WonderLand'
 fi
+
 if [ -z ${AboutLogo} ]
 then
     AboutLogo='../private/images/logo.png'
 fi
+
 if [ -z ${AboutName} ]
 then
     AboutName='Hari Seldon'
 fi
+
 if [ -z ${AboutWebsite} ]
 then
     AboutWebsite='https://www.libre-informatique.fr/'
 fi
+
 if [ -z ${CardsExtra} ]
 then
     CardsExtra="${AboutName} ${AboutWebsite}
 ${AboutAddress}
 ${AboutCountry}"
 fi
+
 if [ -z ${EtickettingSalt} ]
 then
     EtickettingSalt=$(shuf -i 10000-1000000 -n 1 | sha256sum | cut -f1 -d' ')
 fi
+
 if [ -z ${InformationsTitle} ]
 then
     InformationsTitle=${AboutName}
 fi
+
 if [ -z ${OptionsLayout} ]
 then
     OptionsLayout='list'
 fi
+
 if [ -z ${OptionsTheme} ]
 then
     OptionsTheme='dark'
 fi
+
 if [ -z ${SellerAddress} ]
 then
     SellerAddress=${AboutAddress}
 fi
+
 if [ -z ${SellerCity} ]
 then
     SellerCity='City Of Ember'
 fi
+
 if [ -z ${SellerCountry} ]
 then
     SellerCountry=${AboutCountry}
 fi
+
 if [ -z ${SellerLogo} ]
 then
     SellerLogo=${AboutLogo}
 fi
+
 if [ -z ${SellerName} ]
 then
     SellerName=${AboutName}
 fi
+
 if [ -z ${SellerPostalcode} ]
 then
     SellerPostalcode='42'
 fi
+
 if [ -z ${TextsEmailConfirmation} ]
 then
     TextsEmailConfirmation="${SellerName}
 ${SellerPostalcode} ${SellerCity}
 ${SellerWebsite}"
 fi
+
 if [ -z ${TicketsLicences} ]
 then
     TicketsLicences='350970'
 fi
+
+if [ -z ${UserPassword} ]
+then
+    UserPassword='42'
+fi
+
+if [ -z ${PayboxId} ]
+then
+    PayboxId='1'
+fi
+
+if [ -z ${PayboxKey} ]
+then
+     PayboxKey='0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF'
+fi
+
+if [ -z ${PayboxRank} ]
+then
+     PayboxRank='32'
+fi
+
+if [ -z ${PayboxSite} ]
+then
+     PayboxSite='1999888'
+fi
+
+if [ -z ${PayboxUrl} ]
+then
+    PayboxUrl='[https://preprod-tpeweb.paybox.com/, https://preprod-tpeweb1.paybox.com/]'
+fi
+
+if [ -z $PayboxUri} ]
+then
+    PayboxUri='cgi/MYchoix_pagepaiement.cgi'
+fi
+
+
+
 
 #/eve/about/client/address
 #/eve/about/client/country
@@ -130,9 +181,14 @@ fi
 #/eve/texts/email_confirmation
 #/eve/tickets/licences
 
+#/eve/user/password
 
-
-
+#/paybox/id
+#/paybox/key
+#/paybox/rank
+#/paybox/site
+#/paybox/url
+#/paybox/uri
 
 cd
 rm -rf ${workDir}
