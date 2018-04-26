@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -ex
 
-if [ -f .prefix ]
+if [ -f ${Target}/.prefix ]
 then
-    source .prefix
+    source ${Target}/.prefix
 else
     echo "Please run set_prefix.sh before this script"
     exit 42

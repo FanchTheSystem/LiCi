@@ -49,7 +49,7 @@ pipeline {
         stage ('Prepare Env') {
             steps {
                 sh "Target=${env.Target} Project=${params.Project} Name=${params.Name} Branch=${params.Branch}_${params.ConfBranch} sg www-data ./Scripts/set_prefix.sh"
-                sh "PhpVersion=${params.phpVersion} ApacheTargetPath=${env.DockerTarget} sg www-data ./Scripts/set_etcd_env.sh"
+                sh "Target=${env.Target} PhpVersion=${params.phpVersion} ApacheTargetPath=${env.DockerTarget} sg www-data ./Scripts/set_etcd_env.sh"
            }
         }
 
@@ -65,7 +65,7 @@ pipeline {
 
         stage ('Set Config File') {
             steps {
-                sh "DockerTarget=${env.DockerTarget} sg www-data ./Scripts/launch_confd.sh"
+                sh "Target=${env.Target} DockerTarget=${env.DockerTarget} sg www-data ./Scripts/launch_confd.sh"
            }
         }
 
