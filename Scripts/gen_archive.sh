@@ -18,7 +18,8 @@ fi
 
 if [ -z ${LIREPOPATH} ]
 then
-    LIREPOPATH=/tmp
+    echo "Env Variable LIREPOPATH is mandatory, please set it"
+    exit 42
 fi
 
 # Source

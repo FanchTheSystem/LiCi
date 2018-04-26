@@ -12,6 +12,14 @@ then
     Branch=master
 fi
 
+if [ -z ${LIREPOPATH} ]
+then
+    echo "Env Variable LIREPOPATH is mandatory, please set it"
+    exit 42
+fi
+
+
+
 # WorkDir
 workDir=$(mktemp -d) #mkdir ${workDir}
 cd ${workDir}
@@ -21,15 +29,10 @@ if [ -z ${Target} ]
 then
     Target=/tmp
 fi
+
 mkdir -p ${Target}
 cd ${Target}
 Target=$(pwd) #if previous dir was a relative or symbolic path
-
-
-if [ -z ${LIREPOPATH} ]
-then
-    LIREPOPATH=/tmp
-fi
 
 # Source
 if [ -z ${Source} ]
