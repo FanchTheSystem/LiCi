@@ -1,28 +1,16 @@
 #!/usr/bin/env bash
 set -ex
 
+if [ -f .prefix ]
+then
+    source .prefix
+else
+    echo "Please run set_prefix.sh before this script"
+    exit 42
+fi
+
 export ETCDCTL_API=3
 # Branch
-
-
-if [ -z ${Suffix} ]
-then
-    if [ -z ${Name} ]
-    then
-        Name=master
-    fi
-    Suffix=$(echo $Name|sed -e s/-/_/g|sed -e s/ //g|tr '[:upper:]' '[:lower:]')
-fi
-
-if [ -z ${Prefix} ]
-then
-    if [ -z ${Project} ]
-    then
-        Project=Platform
-    fi
-
-    Prefix=$Project/dev/$Suffix
-fi
 
 if [ -z $PhpVersion ]
 then
@@ -35,7 +23,6 @@ then
     ApacheTargetPath=/tmp
 fi
 
-
 if [ -z "$ETCDHOST" ]
 then
     ETCDHOST="etcd.host"
@@ -46,9 +33,6 @@ if [ -z "$ETCDCTLCMD" ]
 then
     ETCDCTLCMD="docker exec $ETCDHOST etcdctl "
 fi
-
-# check
-$ETCDCTLCMD get --prefix '/default' $ETCDENDPOINT
 
 # get postgres default
 postgreshost=$($ETCDCTLCMD get /default/postgres/hostname --print-value-only $ETCDENDPOINT)
@@ -86,9 +70,5 @@ $ETCDCTLCMD put $Prefix/selenium/hostname 127.0.0.1 $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/symfony/env prod $ETCDENDPOINT # maybe put this in env variable (or not)
 # not used on deploy, may be need for conf
 $ETCDCTLCMD put $Prefix/symfony/addr '127.0.0.1:8042' $ETCDENDPOINT
-
-
-# Todo remove Channel Url as it is not used anymore (it have to be remove before in Sil Platform Project)
-$ETCDCTLCMD put $Prefix/sylius/channelurl $apacheurl $ETCDENDPOINT
 
 $ETCDCTLCMD get --prefix $Prefix $ETCDENDPOINT

@@ -14,8 +14,6 @@ pipeline {
 
     environment {
         apachePort = sh(returnStdout: true, script: "echo 8`echo ${params.phpMod} | tr '-' ' ' | wc -w`${params.phpVersion} | sed -e s/'\\.'//g").trim()
-        Suffix = sh(returnStdout: true, script: "echo ${params.Name} | sed -e s/-/_/g | sed -e s/'\\.'//g | tr '[:upper:]' '[:lower:]'").trim()
-        Prefix = sh(returnStdout: true, script: "echo /${params.Project}/${params.Name}/${params.Branch} | sed -e s/-/_/g | sed -e s/'\\.'//g | tr '[:upper:]' '[:lower:]'").trim()
         Target = "$HOME/public_html/${params.Project}/${params.Branch}/${params.Name}"
         DockerTarget = "/home/jenkins/public_html/${params.Project}/${params.Branch}/${params.Name}"
         ETCDHOST = 'etcd.host'
@@ -47,7 +45,8 @@ pipeline {
 
         stage ('Prepare Env') {
             steps {
-                sh "Project=${params.Project} Name=${params.Name} PhpVersion=${params.phpVersion} Prefix=${env.Prefix} ApacheTargetPath=${env.DockerTarget} sg www-data ./Scripts/set_etcd_env.sh"
+                sh "Project=${params.Project} Name=${params.Name} Branch=${params.Branch}_${params.ConfBranch} sg www-data ./Scripts/set_prefix.sh"
+                sh "PhpVersion=${params.phpVersion} ApacheTargetPath=${env.DockerTarget} sg www-data ./Scripts/set_etcd_env.sh"
             }
         }
 
@@ -61,8 +60,7 @@ pipeline {
         stage ('Set Config File') {
             steps {
                 sh "Target=${env.Target} Branch=${params.ConfBranch} sg www-data ./Scripts/apply_conf.sh"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ confd.host confd -onetime -backend etcdv3 -node http://${env.ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix  ${env.Prefix}"
-                /* sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/init_config.sh" */
+                sh "DockerTarget=${env.DockerTarget} sg www-data ./Scripts/launch_confd.sh"
             }
         }
 
