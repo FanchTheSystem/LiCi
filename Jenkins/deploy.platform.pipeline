@@ -48,7 +48,7 @@ pipeline {
 
         stage ('Prepare Env') {
             steps {
-                sh "Project=${params.Project} Name=${params.Name} Branch=${params.Branch}_${params.ConfBranch} sg www-data ./Scripts/set_prefix.sh"
+                sh "Target=${env.Target} Project=${params.Project} Name=${params.Name} Branch=${params.Branch}_${params.ConfBranch} sg www-data ./Scripts/set_prefix.sh"
                 sh "PhpVersion=${params.phpVersion} ApacheTargetPath=${env.DockerTarget} sg www-data ./Scripts/set_etcd_env.sh"
            }
         }
