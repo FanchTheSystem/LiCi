@@ -32,13 +32,13 @@ else
 
     if [ -z ${Suffix} ]
     then
-        Suffix=$(echo "${Name}" | sed -e s/-/_/g | sed -e s/'\\.'//g | tr '[:upper:]' '[:lower:]')
+        Suffix=$(echo "${Name}" | sed s/'\W'//g | tr '[:upper:]' '[:lower:]')
     fi
 
     if [ -z ${Prefix} ]
     then
 
-        Prefix=$(echo "/${Project}/${Name}/${Branch}" | sed -e s/-/_/g | sed -e s/'\\.'//g | tr '[:upper:]' '[:lower:]')
+        Prefix=$(echo "/${Project}/${Name}/${Branch}" | sed s/'\W'//g | tr '[:upper:]' '[:lower:]')
     fi
 
     touch .prefix
