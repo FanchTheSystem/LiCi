@@ -19,26 +19,29 @@ else
     then
         Name=dev
     fi
+    Name=$(echo "${Name}" | sed s/'\W'//g | tr '[:upper:]' '[:lower:]')
 
     if [ -z ${Project} ]
     then
         Project=E-venement
     fi
+    Project=$(echo "${Project}" | sed s/'\W'//g | tr '[:upper:]' '[:lower:]')
 
     if [ -z ${Branch} ]
     then
         Branch=master
     fi
+    Branch=$(echo "${Branch}" | sed s/'\W'//g | tr '[:upper:]' '[:lower:]')
 
     if [ -z ${Suffix} ]
     then
-        Suffix=$(echo "${Name}" | sed s/'\W'//g | tr '[:upper:]' '[:lower:]')
+        Suffix="${Name}"
     fi
 
     if [ -z ${Prefix} ]
     then
 
-        Prefix=$(echo "/${Project}/${Name}/${Branch}" | sed s/'\W'//g | tr '[:upper:]' '[:lower:]')
+        Prefix="/${Project}/${Name}/${Branch}"
     fi
 
     touch .prefix
