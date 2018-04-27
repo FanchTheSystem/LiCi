@@ -33,7 +33,7 @@ export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_gitea"
 git clone git@git.libre-informatique.fr:EvE/YmlConf.git -b eve-starter ${workDir}
 
 
-Target='.' Name='eve-starter' Branch=${NewBranch} $scriptdir/set_prefix.sh
+Target=$workDir Name='eve-starter' Branch=${NewBranch} $scriptdir/set_prefix.sh
 source .prefix
 
 # Should have run check_if_conf_branch_exist.sh before this !
@@ -210,7 +210,7 @@ $ETCDCTLCMD put $Prefix/paybox/uri "${PayboxUri}" $ETCDENDPOINT
 
 $ETCDCTLCMD get --prefix $Prefix $ETCDENDPOINT
 
-DockerTarget=${DockerTarget} Target='.' CONFDDIR="./etc/confd.for.branch.creation" $scriptdir/launch_confd.sh
+DockerTarget=${DockerTarget} Target=${workDir} CONFDDIR="./etc/confd.for.branch.creation" $scriptdir/launch_confd.sh
 
 git status
 git add apps config
