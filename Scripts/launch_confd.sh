@@ -11,7 +11,7 @@ fi
 
 if [ -z "$CONFDDIR" ]
 then
-    CONFDHOST="./etc/confd"
+    CONFDDIR="./etc/confd"
 fi
 
 if [ -z "$CONFDHOST" ]
