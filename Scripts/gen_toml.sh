@@ -7,7 +7,7 @@ for i in $(find $sourcedir -name '*.tmpl')
 do
     fn=$(echo $i | sed -e s:$sourcedir::g)
     tn=$(echo $fn | sed -e s:tmpl:toml:g)
-    cn=$(echo $fn | sed -e s:tmpl::g)
+    cn=$(echo $fn | sed -e s:'.tmpl'::g)
     dn=$(dirname $fn)
 
     mkdir -p $targetdir/$dn
