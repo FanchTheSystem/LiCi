@@ -44,8 +44,7 @@ pipeline {
     }
 
     environment {
-
-        ConfBranch = "eve-starter-${params.Name}"
+        ConfBranch = sh(returnStdout: true, script: "echo eve-starer-$(echo ${params.Name} | sed -e s/'\W'//g | tr '[:upper:]' '[:lower:]')").trim()
     }
 
     stages {
