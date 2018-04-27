@@ -32,7 +32,7 @@ else
 
     if [ -z ${Suffix} ]
     then
-        Suffix=$(echo "${Name}_${Branch}" | sed -e s/-/_/g | sed -e s/'\\.'//g | tr '[:upper:]' '[:lower:]')
+        Suffix=$(echo "${Name}" | sed -e s/-/_/g | sed -e s/'\\.'//g | tr '[:upper:]' '[:lower:]')
     fi
 
     if [ -z ${Prefix} ]
