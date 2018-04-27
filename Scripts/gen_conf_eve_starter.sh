@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
+scriptdir=$(pwd)/Scripts
 # New Branch
 # Target
 if [ -z ${NewBranch} ]
@@ -11,28 +12,39 @@ then
     exit 42
 fi
 
+if [ -z "${TMPDIR}" ]
+then
+    TMPDIR=$HOME/public_html/tmp
+fi
+mkdir -p ${TMPDIR}
+
 # workDir
-workDir=$(mktemp -d)
+workDir=$(mktemp -d -p $TMPDIR)
 cd ${workDir}
-workDir=$(pwd)
+
+# needed as we use confd in docker with /home/jenkins/public_html mount
+# @todo should find a cleaner way to do this
+DockerTarget=/home/jenkins/public_html/tmp/$(basename $workDir)
 
 
 # need ssh key configured in ~/.ssh/config and host added to ~/.ssh/known_hosts
 # don't know why ~/.ssh/config is not read (maybe because home is a symlink ...)
 export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_gitea"
-git clone git@git.libre-informatique.fr:EvE/YmlConf.git -b eve-starter
-cd YmlConf
+git clone git@git.libre-informatique.fr:EvE/YmlConf.git -b eve-starter ${workDir}
+
+
+Target='.' Name='eve-starter' Branch=${NewBranch} $scriptdir/set_prefix.sh
+source .prefix
 
 # Should have run check_if_conf_branch_exist.sh before this !
 git checkout -b ${NewBranch}
 
 # Default eve-starter value
+# @todo automate the add or remove of this list of variable
 
 if [ -z ${AboutAddress} ]
 then
-    AboutAddress='22 acacia avenue
-RM12 4EN Hornchurch
-England'
+    AboutAddress='22 acacia avenue RM12 4EN Hornchurch England'
 fi
 
 if [ -z ${AboutCountry} ]
@@ -57,9 +69,7 @@ fi
 
 if [ -z ${CardsExtra} ]
 then
-    CardsExtra="${AboutName} ${AboutWebsite}
-${AboutAddress}
-${AboutCountry}"
+    CardsExtra="${AboutName} ${AboutWebsite} ${AboutAddress} ${AboutCountry}"
 fi
 
 if [ -z ${EtickettingSalt} ]
@@ -114,9 +124,7 @@ fi
 
 if [ -z ${TextsEmailConfirmation} ]
 then
-    TextsEmailConfirmation="${SellerName}
-${SellerPostalcode} ${SellerCity}
-${SellerWebsite}"
+    TextsEmailConfirmation="${SellerName} ${SellerPostalcode} ${SellerCity} ${SellerWebsite}"
 fi
 
 if [ -z ${TicketsLicences} ]
@@ -154,41 +162,60 @@ then
     PayboxUrl='[https://preprod-tpeweb.paybox.com/, https://preprod-tpeweb1.paybox.com/]'
 fi
 
-if [ -z $PayboxUri} ]
+if [ -z ${PayboxUri} ]
 then
     PayboxUri='cgi/MYchoix_pagepaiement.cgi'
 fi
 
+export ETCDCTL_API=3
 
+if [ -z "$ETCDHOST" ]
+then
+    ETCDHOST="etcd.host"
+fi
+ETCDENDPOINT="--endpoints=http://${ETCDHOST}:2379"
 
+if [ -z "$ETCDCTLCMD" ]
+then
+    ETCDCTLCMD="docker exec $ETCDHOST etcdctl "
+fi
 
-#/eve/about/client/address
-#/eve/about/client/country
-#/eve/about/client/logo
-#/eve/about/client/name
-#/eve/about/client/website
-#/eve/cards/extra
-#/eve/eticketting/salt
-#/eve/informations/title
-#/eve/options/layout
-#/eve/options/theme
-#/eve/seller/address
-#/eve/seller/city
-#/eve/seller/country
-#/eve/seller/logo
-#/eve/seller/name
-#/eve/seller/postalcode
-#/eve/texts/email_confirmation
-#/eve/tickets/licences
+$ETCDCTLCMD version
 
-#/eve/user/password
+$ETCDCTLCMD put $Prefix/eve/about/client/address "${AboutAddress}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/about/client/country "${AboutCountry}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/about/client/logo "${AboutLogo}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/about/client/name "${AboutName}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/about/client/website "${AboutWebsite}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/cards/extra "${CardsExtra}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/eticketting/salt "${EtickettingSalt}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/informations/title  "${InformationsTitle}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/options/layout "${OptionsLayout}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/options/theme "${OptionsTheme}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/seller/address "${SellerAddress}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/seller/city "${SellerCity}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/seller/country "${SellerCountry}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/seller/logo "${SellerLogo}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/seller/name "${SellerName}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/seller/postalcode "${SellerPostalcode}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/texts/email_confirmation "${TextsEmailConfirmation}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/tickets/licences "${TicketsLicences}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/user/password "${UserPassword}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/paybox/id "${PayboxId}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/paybox/key "${PayboxKey}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/paybox/rank "${PayboxRank}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/paybox/site "${PayboxSite}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/paybox/url "${PayboxUrl}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/paybox/uri "${PayboxUri}" $ETCDENDPOINT
 
-#/paybox/id
-#/paybox/key
-#/paybox/rank
-#/paybox/site
-#/paybox/url
-#/paybox/uri
+$ETCDCTLCMD get --prefix $Prefix $ETCDENDPOINT
+
+DockerTarget=${DockerTarget} Target='.' CONFDDIR="./etc/confd.for.branch.creation" $scriptdir/launch_confd.sh
+
+git status
+git add apps config
+git commit -m "[EveStarter] Branch Creation"
+git push -u origin $NewBranch
 
 cd
 rm -rf ${workDir}
