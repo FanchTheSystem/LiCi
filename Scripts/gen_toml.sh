@@ -13,7 +13,7 @@ do
     mkdir -p $targetdir/$dn
 
     echo '[template]' > $targetdir/$tn
-    echo "src = '$tn'" >> $targetdir/$tn
+    echo "src = '$fn'" >> $targetdir/$tn
     echo "dest = '$cn'" >> $targetdir/$tn
     echo 'keys = [' >> $targetdir/$tn
     for j in $(grep getv $i|sed -e s/' '//g|cut -f2 -d'"')
