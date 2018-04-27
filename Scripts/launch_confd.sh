@@ -9,6 +9,11 @@ else
     exit 42
 fi
 
+if [ -z "$CONFDDIR" ]
+then
+    CONFDHOST="./etc/confd"
+fi
+
 if [ -z "$CONFDHOST" ]
 then
     CONFDHOST="confd.host"
@@ -25,5 +30,4 @@ then
     exit 42
 fi
 
-
-docker exec -u jenkins:www-data -w ${DockerTarget} ${CONFDHOST} confd -onetime -backend etcdv3 -node http://${ETCDHOST}:2379 -confdir ./etc/confd -log-level debug -prefix ${Prefix}
+docker exec -u jenkins:www-data -w ${DockerTarget} ${CONFDHOST} confd -onetime -backend etcdv3 -node http://${ETCDHOST}:2379 -confdir ${CONFDDIR} -log-level debug -prefix ${Prefix}
