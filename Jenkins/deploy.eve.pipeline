@@ -7,7 +7,7 @@ pipeline {
         string(defaultValue: 'E-venement', description: 'Project Name', name: 'Project')
         string(defaultValue: 'master', description: 'Git  Branch Name', name: 'Branch')
         string(defaultValue: 'eve-standard', description: 'Git Branch Name for configuration file', name: 'ConfBranch')
-        string(defaultValue: 'master', description: 'Name of the deploiement, will change the target directory or serveur', name: 'Name')
+        string(defaultValue: 'testname', description: 'Name of the deploiement, will change the target directory or serveur', name: 'Name')
         string(defaultValue: 'ci.libre-informatique.fr', description: 'Base Url', name: 'apacheUrl')
         choice(choices: 'false\ntrue', description: '', name: 'CreateArchive')
      }

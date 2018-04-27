@@ -6,7 +6,7 @@ pipeline {
         choice(choices: 'php\nphp-fpm', description: 'Mod Php', name: 'phpMod')
         string(defaultValue: 'Platform', description: 'Project Name', name: 'Project')
         string(defaultValue: 'master', description: 'Git(or job) Branch Name', name: 'Branch')
-        string(defaultValue: 'master', description: 'Name of the deploiement, may change the target directory or serveur', name: 'Name')
+        string(defaultValue: 'testname', description: 'Name of the deploiement, may change the target directory or serveur', name: 'Name')
         string(defaultValue: 'ci.libre-informatique.fr', description: 'Base Url', name: 'apacheUrl')
     }
 
