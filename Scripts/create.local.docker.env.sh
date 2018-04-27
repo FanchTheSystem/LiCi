@@ -18,5 +18,5 @@ docker exec etcd.host etcd --version
 docker container stop confd.host || echo ok
 docker container rm confd.host || echo ok
 docker build --build-arg CONFDVER=0.15.0 --build-arg UID=`id -u` --build-arg GID=100 -t confd-img-0.15.0 -f Docker/confd.dockerfile .
-docker run -dt --network=ci.network --volume /home/francois/public_html:/home/jenkins/public_html --name confd.host confd-img-0.15.0
+docker run -dt --network=ci.network --volume $HOME/public_html:/home/jenkins/public_html --name confd.host confd-img-0.15.0
 docker exec confd.host confd --version
