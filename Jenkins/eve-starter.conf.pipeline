@@ -65,15 +65,15 @@ pipeline {
         stage ('Set Name and Description') {
             steps {
                 script {
-                    currentBuild.displayName = "#${BUILD_NUMBER} Launch Deploy from ${params.Branch} to ${params.Name}"
-                    currentBuild.description = "<a href='http://ci.libre-informatique.fr:8156/~jenkins/E-venement/${params.Branch}/${params.Name}/web'>Link To Instance</a>"
+                    currentBuild.displayName = "#${BUILD_NUMBER} Launch Deploy from ${params.Branch} to ${env.CleanName}"
+                    currentBuild.description = "<a href='http://ci.libre-informatique.fr:8156/~jenkins/E-venement/${params.Branch}/${env.CleanName}/web'>Link To Instance</a>"
                 }
             }
         }
 
         stage ('Deploy Eve') {
             steps {
-                build job: "Deploy E-venement", parameters: [string(name: 'Project', value: 'E-venement'), string(name: 'Branch', value: "${params.Branch}"), string(name: 'Name', value: "${params.Name}"), string(name: 'ConfBranch', value: "${env.NewBranch}"), string(name: 'CreateArchive', value: "true") ], wait: true
+                build job: "Deploy E-venement", parameters: [string(name: 'Project', value: 'E-venement'), string(name: 'Branch', value: "${params.Branch}"), string(name: 'Name', value: "${env.CleanName}"), string(name: 'ConfBranch', value: "${env.NewBranch}"), string(name: 'CreateArchive', value: "true") ], wait: true
             }
         }
 
