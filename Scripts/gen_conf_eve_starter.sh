@@ -220,6 +220,8 @@ $ETCDCTLCMD put $Prefix/paybox/rank "${PayboxRank}" $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/paybox/site "${PayboxSite}" $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/paybox/url "${PayboxUrl}" $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/paybox/uri "${PayboxUri}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/apache/instance "${ApacheName}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/apache/domain "${ApacheDomain}" $ETCDENDPOINT
 
 $ETCDCTLCMD get --prefix $Prefix $ETCDENDPOINT
 
