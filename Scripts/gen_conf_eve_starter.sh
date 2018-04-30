@@ -39,7 +39,7 @@ source .prefix
 # Should have run check_if_conf_branch_exist.sh before this !
 git checkout -b ${NewBranch}
 
-# Default eve-starter value
+###### START DEFAULT EVE-STARTER Variable
 # @todo automate the add or remove of this list of variable
 
 if [ -z ${AboutAddress} ]
@@ -166,6 +166,19 @@ if [ -z ${PayboxUri} ]
 then
     PayboxUri='cgi/MYchoix_pagepaiement.cgi'
 fi
+
+if [ -z ${ApacheName} ]
+then
+    ApacheName=${NewBranch}
+fi
+
+if [ -z ${ApacheDomain} ]
+then
+    ApacheDomain=e-venement.net
+fi
+
+#### END DEFAULT VARIABLE
+
 
 export ETCDCTL_API=3
 

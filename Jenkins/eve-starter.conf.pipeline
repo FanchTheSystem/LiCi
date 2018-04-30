@@ -39,7 +39,8 @@ pipeline {
         string(defaultValue: '[https://preprod-tpeweb.paybox.com/, https://preprod-tpeweb1.paybox.com/]', description: 'PayBox Url', name: 'PayboxUrl')
         string(defaultValue: 'cgi/MYchoix_pagepaiement.cgi', description: 'PayBox Uri', name: 'PayboxUri')
 
-        string(defaultValue: '', description: 'Apache VirtualHost Alias', name: 'ApacheUrl')
+        string(defaultValue: '', description: 'Apache Instance Name (Will be used for DocumentRoot, ServerName, ServerAlias ...) (You may use the same as configuration name)', name: 'ApacheName')
+        string(defaultValue: 'e-venement.net', description: 'Apache Main Domain', name: 'ApacheDomain')
 
     }
 
