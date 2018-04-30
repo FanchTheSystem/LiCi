@@ -39,9 +39,9 @@ then
 
     rm -f ${Filename}
 
-    tar -czf --exclude-vcs \
+    tar -czf ${Filename} --exclude-vcs \
         --exclude=etc \
-        ${Filename} ./*
+        ./* ./.env ./.prefix
 
     sha256sum ${Filename} > ${Filename}.sha256.txt
 # -h
