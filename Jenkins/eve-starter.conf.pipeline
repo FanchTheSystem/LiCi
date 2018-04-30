@@ -3,7 +3,7 @@ pipeline {
     parameters {
         choice(choices: 'wip-ci-debug\nmaster\nv2.10\nv2.12', description: 'Source Branch', name: 'Branch')
 
-        string(defaultValue: 'test', description: 'Name of the configuration (used to create git branch eve-starter-${Name})', name: 'Name')
+        string(defaultValue: 'test', description: 'Name of the configuration (used to create git branch eve-starter-${Name}) (Warning if the name already exist the job will failed !)', name: 'Name')
 
         choice(choices: 'dark\nmedium\nsoft', description: 'Css Theme', name: 'Theme')
         choice(choices: 'list\ngrid\nsection_grid', description: 'Css Layout', name: 'Layout')
