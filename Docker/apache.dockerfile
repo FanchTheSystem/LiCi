@@ -29,8 +29,8 @@ RUN a2enmod headers && a2enmod userdir && a2enmod rewrite
 RUN if [ "${PHPMOD}" = "php" ]; then a2dismod mpm_event && a2enmod mpm_prefork && a2enmod php${PHPVER}; fi
 RUN if [ "${PHPMOD}" = "php-fpm" ]; then a2enmod proxy_fcgi setenvif; a2dismod php${PHPVER}; a2enconf php${PHPVER}-fpm; fi
 
-RUN if [ "${PHPMOD}" = "php" ]; then echo "memory_limit=-1" >> /etc/php/${PHPVER}/apache2/conf.d/42-memory-limit.ini ; fi\
-    && if [ "${PHPMOD}" = "php-fpm" ]; then echo "memory_limit=-1" >> /etc/php/${PHPVER}/fpm/conf.d/42-memory-limit.ini ; fi\
+RUN if [ "${PHPMOD}" = "php" ]; then echo "memory_limit=1G" >> /etc/php/${PHPVER}/apache2/conf.d/42-memory-limit.ini ; fi\
+    && if [ "${PHPMOD}" = "php-fpm" ]; then echo "memory_limit=1G" >> /etc/php/${PHPVER}/fpm/conf.d/42-memory-limit.ini ; fi\
     && echo "memory_limit=-1" >> /etc/php/${PHPVER}/cli/conf.d/42-memory-limit.ini
 
 RUN apache2ctl configtest
