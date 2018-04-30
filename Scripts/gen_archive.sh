@@ -39,7 +39,9 @@ then
 
     rm -f ${Filename}
 
-    tar -czf ${Filename} ./*
+    tar -czf --exclude-vcs \
+        --exclude=etc \
+        ${Filename} ./*
 
     sha256sum ${Filename} > ${Filename}.sha256.txt
 # -h
