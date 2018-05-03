@@ -12,31 +12,17 @@ pipeline {
         stage ('Clone Platform') {
             steps {
                 sh 'git clone https://github.com/sil-project/Platform.git --depth 1'
+                sh 'cd Platform/etc && docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f dockerfile.build.jenkins . && cd -'
+                sh 'cd Platform/src/Skeleton/etc && docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f dockerfile.jenkins . && cd -'
             }
         }
 
-        stage('Parallel PreFetch') {
-            parallel {
-
-                stage ('Platform Docker') {
-                    steps {
-                        sh 'cd Platform/etc && docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t platform-img -f dockerfile.build.jenkins . && cd -'
-                    }
-                }
-
-                stage ('Skeleton Docker') {
-                    steps {
-                        sh 'cd Platform/src/Skeleton/etc && docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t skeleton-img -f dockerfile.jenkins . && cd -'
-                    }
-                }
-
-
-                stage ('E-venement') {
-                    steps {
-                        sh 'git clone https://github.com/e-venement/e-venement.git --depth 1'
-                        sh 'cd e-venement/etc && docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t eve-img -f dockerfile.jenkins . && cd -'
-                    }
-                }
+        stage ('E-venement') {
+            steps {
+                sh 'git clone https://github.com/e-venement/e-venement.git --depth 1'
+                sh 'cd e-venement/etc && docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f dockerfile.jenkins . && cd -'
+                sh 'git clone https://github.com/e-venement/SeleniumEveTest --depth 1'
+                sh 'cd  SeleniumEveTest/etc && docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f dockerfile.jenkins . && cd -'
             }
         }
     }
