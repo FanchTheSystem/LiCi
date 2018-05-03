@@ -24,6 +24,7 @@ pipeline {
         string(defaultValue: '', description: 'Cards Extra (Information Print on Card)', name: 'CardsExtra')
         string(defaultValue: '', description: 'Ticket Salt (Empty for random)', name: 'EtickettingSalt')
         string(defaultValue: '', description: 'Page Information Title (May be the same as About Name)', name: 'InformationsTitle')
+        string(defaultValue: 'no-reply@e-venement.net', description: 'Page Information Email', name: 'InformationsEmail')
 
         string(defaultValue: '', description: 'Text for Sent Email (May be with some %%COMMAND%% or %%DATE%%)', name: 'TextsEmailConfirmation')
 

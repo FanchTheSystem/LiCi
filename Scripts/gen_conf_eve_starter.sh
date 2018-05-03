@@ -82,6 +82,11 @@ then
     InformationsTitle=${AboutName}
 fi
 
+if [ -z ${InformationsEmail} ]
+then
+    InformationsEmail='no-reply@e-venement.net'
+fi
+
 if [ -z ${OptionsLayout} ]
 then
     OptionsLayout='list'
@@ -202,7 +207,8 @@ $ETCDCTLCMD put $Prefix/eve/about/client/name "${AboutName}" $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/eve/about/client/website "${AboutWebsite}" $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/eve/cards/extra "${CardsExtra}" $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/eve/eticketting/salt "${EtickettingSalt}" $ETCDENDPOINT
-$ETCDCTLCMD put $Prefix/eve/informations/title  "${InformationsTitle}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/informations/title "${InformationsTitle}" $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/eve/informations/email "${InformationsEmail}" $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/eve/options/layout "${OptionsLayout}" $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/eve/options/theme "${OptionsTheme}" $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/eve/seller/address "${SellerAddress}" $ETCDENDPOINT
