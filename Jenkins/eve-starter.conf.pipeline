@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        choice(choices: 'wip-ci-debug\nmaster\nv2.10\nv2.12', description: 'Source Branch', name: 'Branch')
+        choice(choices: 'master\nv2.10\nv2.12', description: 'Source Branch', name: 'Branch')
 
         string(defaultValue: 'test', description: 'Name of the configuration (used to create git branch eve-starter-${Name}) (Warning if the name already exist the job will failed !)', name: 'Name')
 
