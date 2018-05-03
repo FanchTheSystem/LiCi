@@ -47,6 +47,11 @@ pipeline {
     environment {
         CleanName = sh(returnStdout: true, script: "echo ${params.Name} | sed -e s/'\\W'//g | tr '[:upper:]' '[:lower:]'").trim()
         NewBranch = "eve-starter-${env.CleanName}"
+
+        /* @todo should find a cleaner way to set this */
+        UrlAddr = 'http://ci.libre-informatique.fr:8156'
+        UrlPath = sh(returnStdout: true, script: "echo '~jenkins/E-venement/'${params.Branch}'/'${params.Name}'/web'").trim()
+
     }
 
     stages {
@@ -75,6 +80,13 @@ pipeline {
         stage ('Deploy Eve') {
             steps {
                 build job: "Deploy E-venement", parameters: [string(name: 'Project', value: 'E-venement'), string(name: 'Branch', value: "${params.Branch}"), string(name: 'Name', value: "${env.CleanName}"), string(name: 'ConfBranch', value: "${env.NewBranch}"), string(name: 'CreateArchive', value: "true") ], wait: true
+            }
+        }
+
+
+        stage ('Test Eve') {
+            steps {
+                build job: "Test E-venement", parameters: [string(name: 'UrlAddr', value: "${env.UrlAddr}"), string(name: 'UrlPath', value: "${env.UrlPath}")], wait: true
             }
         }
 
