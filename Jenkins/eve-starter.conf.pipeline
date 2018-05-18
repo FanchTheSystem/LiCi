@@ -53,7 +53,7 @@ pipeline {
 
         /* @todo should find a cleaner way to set this */
         UrlAddr = 'http://ci.libre-informatique.fr:8156'
-        UrlPath = sh(returnStdout: true, script: "echo '~jenkins/E-venement/'${params.Branch}'/'${params.CleanName}'/web'").trim()
+        UrlPath = sh(returnStdout: true, script: "echo '~jenkins/E-venement/'${params.Branch}'/'${env.CleanName}'/web'").trim()
 
     }
 
