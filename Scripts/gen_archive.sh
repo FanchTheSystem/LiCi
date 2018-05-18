@@ -38,9 +38,11 @@ then
     Filename=${TargetRepo}/${Project}_${Name}_${Branch}.tar.gz
 
     rm -f ${Filename}
+    rm -f *.tar.gz
 
     tar -czf ${Filename} --exclude-vcs \
         --exclude=etc \
+        --exclude=doc \
         ./* ./.env ./.prefix
 
     sha256sum ${Filename} > ${Filename}.sha256.txt
