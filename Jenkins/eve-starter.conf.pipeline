@@ -47,7 +47,7 @@ pipeline {
 
     environment {
         CleanName = sh(returnStdout: true, script: "echo ${params.Name} | sed -e s/'\\W'//g | tr '[:upper:]' '[:lower:]'").trim()
-        NewBranch = "eve-starter-${env.CleanName}"
+        NewBranch = "es-${env.CleanName}"
 
         /* @todo should find a cleaner way to set this */
         UrlAddr = 'http://ci.libre-informatique.fr:8156'
