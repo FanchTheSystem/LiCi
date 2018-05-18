@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        string(defaultValue: '9.4', description: 'Version of Postgres', name: 'Version')
+        string(defaultValue: '9.6', description: 'Version of Postgres', name: 'Version')
     }
 
     environment {
