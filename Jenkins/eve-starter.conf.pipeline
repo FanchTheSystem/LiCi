@@ -5,6 +5,8 @@ pipeline {
 
         string(defaultValue: 'test', description: 'Name of the configuration (used to create git branch eve-starter-${Name}) (Warning if the name already exist the job will failed !)', name: 'Name')
 
+        choice(choices: 'false\ntrue', description: 'Override Existing Branch', name: 'DoOverride')
+
         choice(choices: 'dark\nmedium\nsoft', description: 'Css Theme', name: 'Theme')
         choice(choices: 'list\ngrid\nsection_grid', description: 'Css Layout', name: 'Layout')
 
@@ -51,15 +53,27 @@ pipeline {
 
         /* @todo should find a cleaner way to set this */
         UrlAddr = 'http://ci.libre-informatique.fr:8156'
-        UrlPath = sh(returnStdout: true, script: "echo '~jenkins/E-venement/'${params.Branch}'/'${params.Name}'/web'").trim()
+        UrlPath = sh(returnStdout: true, script: "echo '~jenkins/E-venement/'${params.Branch}'/'${params.CleanName}'/web'").trim()
 
     }
 
     stages {
 
         stage ('Check Branch') {
+            when {
+                expression { params.DoOverride == 'false' }
+            }
             steps {
                 sh "NewBranch=${env.NewBranch} ./Scripts/check_if_conf_branch_exist.sh"
+            }
+        }
+
+        stage ('Delete Branch') {
+            when {
+                expression { params.DoOverride == 'true' }
+            }
+            steps {
+                sh "NewBranch=${env.NewBranch} ./Scripts/delete_branch_if_exist.sh"
             }
         }
 
