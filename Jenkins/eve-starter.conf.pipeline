@@ -30,7 +30,7 @@ pipeline {
 
         string(defaultValue: '', description: 'Text for Sent Email (May be with some %%COMMAND%% or %%DATE%%)', name: 'TextsEmailConfirmation')
 
-        choice(choices: '350970\n350971\n350972', description: 'Tickets Licence', name: 'TicketsLicences')
+        string(defaultValue: '', description: 'Tickets Licence', name: 'TicketsLicences')
 
         string(defaultValue: '42', description: 'Default Password for all user (may be finer later)', name: 'UserPassword')
 
