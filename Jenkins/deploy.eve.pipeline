@@ -39,6 +39,8 @@ pipeline {
         stage ('Check & Prepare Apache') {
             steps {
                 sh "docker exec -u root apache-${params.phpMod}-cnt-${params.phpVersion} service apache2 status"
+                /* Clean directory before install as it used for tar creation */
+                sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} rm -rf ${env.DockerTarget}"
                 sh "docker exec -u jenkins:www-data apache-${params.phpMod}-cnt-${params.phpVersion} mkdir -p ${env.DockerTarget}"
             }
         }
