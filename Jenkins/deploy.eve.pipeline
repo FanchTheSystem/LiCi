@@ -64,16 +64,6 @@ pipeline {
             }
         }
 
-        /* Launch two time for handle different naming in evenement branch */
-
-        stage ('Create Database Test') {
-            steps {
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/do_run.sh set_pgpass_test.sh"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/do_run.sh create_database_test.sh"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/do_run.sh install_db_test.sh"
-                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/do_run.sh load_fixture_test.sh"
-            }
-        }
 
         stage ('Create Database') {
             steps {
