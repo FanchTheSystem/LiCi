@@ -83,6 +83,7 @@ pipeline {
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/do_run.sh create_database.sh"
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/do_run.sh install_db.sh"
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/do_run.sh load_fixture.sh"
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/do_run.sh update_sequence.sh"
             }
         }
 
