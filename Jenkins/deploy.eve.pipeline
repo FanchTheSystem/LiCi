@@ -78,6 +78,8 @@ pipeline {
         stage ('Create Database') {
             steps {
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/do_run.sh set_pgpass.sh"
+                /* in ci we drop database before run because we don't know how to handle fixture if they are already loaded */
+                sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/do_run.sh drop_database.sh"
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/do_run.sh create_database.sh"
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/do_run.sh install_db.sh"
                 sh "docker exec -u jenkins:www-data -w ${env.DockerTarget}/ apache-${params.phpMod}-cnt-${params.phpVersion} bin/ci-scripts/do_run.sh load_fixture.sh"
