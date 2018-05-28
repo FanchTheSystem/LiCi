@@ -40,7 +40,10 @@ then
     rm -f ${Filename}
     rm -f *.tar.gz
 
-    tar -czf ${Filename} --exclude-vcs \
+    tar -czf ${Filename} \
+        --owner=$(id -u www-data) \
+        --group=$(id -g www-data) \
+        --exclude-vcs \
         --exclude=etc \
         --exclude=doc \
         ./* ./.env ./.prefix
