@@ -12,7 +12,7 @@ pipeline {
         stage ('Set Name and Description') {
             steps {
                 script {
-                    currentBuild.displayName = "#${BUILD_NUMBER} Eve Starter Creation for : ${params.Name} ,  with : ${params.Branch} / ${params.ConfBranch}"
+                    currentBuild.displayName = "#${BUILD_NUMBER} Eve Starter For : ${params.Name} ,  with : ${params.Branch} / ${params.ConfBranch}"
                     currentBuild.description = "<a href='http://ci.libre-informatique.fr:8156/~jenkins/E-venement/${params.Branch}/${params.Name}/web'>Link To Instance</a>"
                 }
             }
