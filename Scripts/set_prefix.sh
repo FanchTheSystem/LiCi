@@ -23,7 +23,7 @@ else
 
     if [ -z ${Project} ]
     then
-        Project=Eve
+        Project=E-venement
     fi
     Project=$(echo "${Project}" | sed s/'\W'//g | tr '[:upper:]' '[:lower:]')
 
