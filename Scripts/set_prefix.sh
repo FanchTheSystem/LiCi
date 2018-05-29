@@ -35,7 +35,7 @@ else
 
     if [ -z ${Suffix} ]
     then
-        Suffix="${Project}_${Name}"
+        Suffix=$(echo ${Project} | cut -c1-3)_${Name}
     fi
 
     if [ -z ${Prefix} ]
