@@ -35,7 +35,7 @@ else
 
     if [ -z ${Suffix} ]
     then
-        Suffix="${Name}"
+        Suffix="${Project}_${Name}"
     fi
 
     if [ -z ${Prefix} ]

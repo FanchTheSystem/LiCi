@@ -55,13 +55,13 @@ $ETCDCTLCMD put $Prefix/postgres/hostname $postgreshost $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/postgres/root/username $postgresuser $ETCDENDPOINT
 $ETCDCTLCMD put $Prefix/postgres/root/password $postgrespass $ETCDENDPOINT
 
-$ETCDCTLCMD put $Prefix/postgres/user/dbname d$Suffix $ETCDENDPOINT
-$ETCDCTLCMD put $Prefix/postgres/user/username u$Suffix $ETCDENDPOINT
-$ETCDCTLCMD put $Prefix/postgres/user/password p$Suffix $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/postgres/user/dbname $Suffix $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/postgres/user/username $Suffix $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/postgres/user/password $(openssl rand -hex 4) $ETCDENDPOINT
 
 # set elastic env
 $ETCDCTLCMD put $Prefix/elastic/hostname $elastichost $ETCDENDPOINT
-$ETCDCTLCMD put $Prefix/elastic/indexalias s$Suffix $ETCDENDPOINT
+$ETCDCTLCMD put $Prefix/elastic/indexalias $Suffix $ETCDENDPOINT
 
 # not used on deploy, may be need for conf
 $ETCDCTLCMD put $Prefix/selenium/hostname 127.0.0.1 $ETCDENDPOINT
