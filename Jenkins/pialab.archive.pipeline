@@ -52,22 +52,22 @@ pipeline {
                     string(value: "${params.GlobalName}-back",  name: 'GlobalName'),
                     string(value: "${params.FrontUrl}", name: 'FrontUrl'),
 
-                    string(value: "${params.BackDirectory}", name: 'BackDirectory')
-                    string(value: "${params.BackSSLCertificateFile}", name: 'BackSSLCertificateFile')
-                    string(value: "${params.BackSSLCertificateKeyFile}", name: 'BackSSLCertificateKeyFile')
-                    string(value: "${params.BackSSLCertificateChainFile}", name: 'BackSSLCertificateChainFile')
+                    string(value: "${params.BackDirectory}", name: 'BackDirectory'),
+                    string(value: "${params.BackSSLCertificateFile}", name: 'BackSSLCertificateFile'),
+                    string(value: "${params.BackSSLCertificateKeyFile}", name: 'BackSSLCertificateKeyFile'),
+                    string(value: "${params.BackSSLCertificateChainFile}", name: 'BackSSLCertificateChainFile'),
 
-                    string(value: "${params.DatabaseName}", name: 'DatabaseName')
-                    string(value: "${params.DatabaseUser}", name: 'DatabaseUser')
-                    string(value: "${params.DatabasePassword}", name: 'DatabasePassword')
+                    string(value: "${params.DatabaseName}", name: 'DatabaseName'),
+                    string(value: "${params.DatabaseUser}", name: 'DatabaseUser'),
+                    string(value: "${params.DatabasePassword}", name: 'DatabasePassword'),
 
-                    string(value: "${params.MailerUrl}", name: 'MailerUrl')
+                    string(value: "${params.MailerUrl}", name: 'MailerUrl'),
 
 
-                    string(value: "${params.BuildEnv}", name: 'BuildEnv')
-                    string(value: "${params.ClientId}", name: 'ClientId')
-                    string(value: "${params.ClientSecret}", name: 'ClientSecret')
-                    string(value: 'false', name: 'RunTest')
+                    string(value: "${params.BuildEnv}", name: 'BuildEnv'),
+                    string(value: "${params.ClientId}", name: 'ClientId'),
+                    string(value: "${params.ClientSecret}", name: 'ClientSecret'),
+                    string(value: 'false', name: 'RunTest'),
                     string(value: 'private', name: 'Repo')]
                 ], wait: true
             }
@@ -80,15 +80,15 @@ pipeline {
                     string(value: "${params.GlobalName}-front",  name: 'GlobalName'),
                     string(value: "${params.BackUrl}", name: 'BackUrl'),
 
-                    string(value: "${params.FrontDirectory}", name: 'FrontDirectory')
-                    string(value: "${params.FrontSSLCertificateFile}", name: 'FrontSSLCertificateFile')
-                    string(value: "${params.FrontSSLCertificateKeyFile}", name: 'FrontSSLCertificateKeyFile')
-                    string(value: "${params.FrontSSLCertificateChainFile}", name: 'FrontSSLCertificateChainFile')
+                    string(value: "${params.FrontDirectory}", name: 'FrontDirectory'),
+                    string(value: "${params.FrontSSLCertificateFile}", name: 'FrontSSLCertificateFile'),
+                    string(value: "${params.FrontSSLCertificateKeyFile}", name: 'FrontSSLCertificateKeyFile'),
+                    string(value: "${params.FrontSSLCertificateChainFile}", name: 'FrontSSLCertificateChainFile'),
 
-                    string(value: "${params.BuildEnv}", name: 'BuildEnv')
-                    string(value: "${params.ClientId}", name: 'ClientId')
-                    string(value: "${params.ClientSecret}", name: 'ClientSecret')
-                    string(value: 'false', name: 'RunTest')
+                    string(value: "${params.BuildEnv}", name: 'BuildEnv'),
+                    string(value: "${params.ClientId}", name: 'ClientId'),
+                    string(value: "${params.ClientSecret}", name: 'ClientSecret'),
+                    string(value: 'false', name: 'RunTest'),
                     string(value: 'private', name: 'Repo')]
                 ], wait: true
             }
