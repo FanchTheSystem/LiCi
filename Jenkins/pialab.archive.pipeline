@@ -68,7 +68,7 @@ pipeline {
                     string(value: "${params.ClientId}", name: 'ClientId'),
                     string(value: "${params.ClientSecret}", name: 'ClientSecret'),
                     string(value: 'false', name: 'RunTest'),
-                    string(value: 'private', name: 'Repo')]
+                    string(value: 'private', name: 'Repo')
                 ], wait: true
             }
 
@@ -89,7 +89,7 @@ pipeline {
                     string(value: "${params.ClientId}", name: 'ClientId'),
                     string(value: "${params.ClientSecret}", name: 'ClientSecret'),
                     string(value: 'false', name: 'RunTest'),
-                    string(value: 'private', name: 'Repo')]
+                    string(value: 'private', name: 'Repo')
                 ], wait: true
             }
 
