@@ -22,21 +22,33 @@ pipeline {
 
         string(defaultValue: 'test', description: '', name: 'BuildEnv')
 
-        string(defaultValue: '', description: '', name: 'DatabaseName')
-        string(defaultValue: '', description: '', name: 'DatabaseUser')
-        string(defaultValue: '', description: '', name: 'DatabasePassword')
+        string(defaultValue: '', description: 'Leave Empty For Default Value', name: 'DatabaseName')
+        string(defaultValue: '', description: 'Leave Empty For Default Value', name: 'DatabaseUser')
+        string(defaultValue: '', description: 'Leave Empty For Random', name: 'DatabasePassword')
+
+        string(defaultValue: '', description: 'Leave Empty For Default Value', name: 'DatabaseHost')
+        string(defaultValue: '', description: 'Leave Empty For Default Value', name: 'DatabaseRootUser')
+        string(defaultValue: '', description: 'Leave Empty For Default Value', name: 'DatabaseRootPassword')
 
         string(defaultValue: 'smtp://127.0.0.1:1025', description: '', name: 'MailerUrl')
 
         /* string(defaultValue: 'master', description: '', name: 'BackGitBranch') */
 
-        string(defaultValue: '', description: '', name: 'ClientId')
-        string(defaultValue: '', description: '', name: 'ClientSecret')
+        string(defaultValue: '', description: 'Leave Empty For Random', name: 'ClientId')
+        string(defaultValue: '', description: 'Leave Empty For Random', name: 'ClientSecret')
 
         string(defaultValue: 'master', description: '', name: 'FrontGitBranch')
         string(defaultValue: 'master', description: '', name: 'BackGitBranch')
 
     }
+
+    environment {
+        BuildTag = sh(returnStdout: true, script: "`openssl rand -hex 8`").trim()
+        ClientId= sh(returnStdout: true, script: "[ -n \"${params.ClientId}\" ] || ClientId=`openssl rand -hex 24` && echo $ClientId").trim()
+        ClientSecret= sh(returnStdout: true, script: "[ -n \"${params.ClientSecret}\" ] || ClientSecret=`openssl rand -hex 24` && echo $ClientSecret").trim()
+        DatabasePassword= sh(returnStdout: true, script: "[ -n \"${params.DatabasePassword}\" ] || DatabasePassword=`openssl rand -hex 24` && echo $DatabasePassword").trim()
+    }
+
 
     options {
         timeout(time: 1, unit: 'HOURS')
@@ -49,7 +61,7 @@ pipeline {
         stage ('Create Back Archive') {
             steps {
                 build job: "PiaLab/pialab-back/${params.BackGitBranch}",  parameters: [
-                    string(value: "${params.GlobalName}-back",  name: 'GlobalName'),
+                    string(value: "${params.GlobalName}-${env.BuildTag}-back",  name: 'GlobalName'),
                     string(value: "${params.FrontUrl}", name: 'FrontUrl'),
 
                     string(value: "${params.BackDirectory}", name: 'BackDirectory'),
@@ -59,14 +71,18 @@ pipeline {
 
                     string(value: "${params.DatabaseName}", name: 'DatabaseName'),
                     string(value: "${params.DatabaseUser}", name: 'DatabaseUser'),
-                    string(value: "${params.DatabasePassword}", name: 'DatabasePassword'),
+                    string(value: "${env.DatabasePassword}", name: 'DatabasePassword'),
+
+                    string(value: "${params.DatabaseHost}", name: 'DatabaseName'),
+                    string(value: "${params.DatabaseRootUser}", name: 'DatabaseUser'),
+                    string(value: "${params.DatabaseRootPassword}", name: 'DatabasePassword'),
 
                     string(value: "${params.MailerUrl}", name: 'MailerUrl'),
 
 
                     string(value: "${params.BuildEnv}", name: 'BuildEnv'),
-                    string(value: "${params.ClientId}", name: 'ClientId'),
-                    string(value: "${params.ClientSecret}", name: 'ClientSecret'),
+                    string(value: "${env.ClientId}", name: 'ClientId'),
+                    string(value: "${env.ClientSecret}", name: 'ClientSecret'),
                     string(value: 'false', name: 'RunTest'),
                     string(value: 'private', name: 'Repo')
                 ], wait: true
@@ -77,7 +93,7 @@ pipeline {
         stage ('Create Front Archive') {
             steps {
                 build job: "PiaLab/pialab/${params.FrontGitBranch}",  parameters: [
-                    string(value: "${params.GlobalName}-front",  name: 'GlobalName'),
+                    string(value: "${params.GlobalName}-${env.BuildTag}-front",  name: 'GlobalName'),
                     string(value: "${params.BackUrl}", name: 'BackUrl'),
 
                     string(value: "${params.FrontDirectory}", name: 'FrontDirectory'),
@@ -86,8 +102,8 @@ pipeline {
                     string(value: "${params.FrontSSLCertificateChainFile}", name: 'FrontSSLCertificateChainFile'),
 
                     string(value: "${params.BuildEnv}", name: 'BuildEnv'),
-                    string(value: "${params.ClientId}", name: 'ClientId'),
-                    string(value: "${params.ClientSecret}", name: 'ClientSecret'),
+                    string(value: "${env.ClientId}", name: 'ClientId'),
+                    string(value: "${env.ClientSecret}", name: 'ClientSecret'),
                     string(value: 'false', name: 'RunTest'),
                     string(value: 'private', name: 'Repo')
                 ], wait: true
