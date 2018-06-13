@@ -43,7 +43,7 @@ pipeline {
     }
 
     environment {
-        BuildTag = sh(returnStdout: true, script: "`openssl rand -hex 8`").trim()
+        BuildTag = sh(returnStdout: true, script: "openssl rand -hex 8").trim()
         ClientId= sh(returnStdout: true, script: "[ -n \"${params.ClientId}\" ] || ClientId=`openssl rand -hex 24` && echo $ClientId").trim()
         ClientSecret= sh(returnStdout: true, script: "[ -n \"${params.ClientSecret}\" ] || ClientSecret=`openssl rand -hex 24` && echo $ClientSecret").trim()
         DatabasePassword= sh(returnStdout: true, script: "[ -n \"${params.DatabasePassword}\" ] || DatabasePassword=`openssl rand -hex 24` && echo $DatabasePassword").trim()
