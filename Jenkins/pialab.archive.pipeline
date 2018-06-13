@@ -73,9 +73,9 @@ pipeline {
                     string(value: "${params.DatabaseUser}", name: 'DatabaseUser'),
                     string(value: "${env.DatabasePassword}", name: 'DatabasePassword'),
 
-                    string(value: "${params.DatabaseHost}", name: 'DatabaseName'),
-                    string(value: "${params.DatabaseRootUser}", name: 'DatabaseUser'),
-                    string(value: "${params.DatabaseRootPassword}", name: 'DatabasePassword'),
+                    string(value: "${params.DatabaseHost}", name: 'DatabaseHost'),
+                    string(value: "${params.DatabaseRootUser}", name: 'DatabaseRootUser'),
+                    string(value: "${params.DatabaseRootPassword}", name: 'DatabaseRootPassword'),
 
                     string(value: "${params.MailerUrl}", name: 'MailerUrl'),
 
