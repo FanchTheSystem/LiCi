@@ -12,13 +12,11 @@ pipeline {
 
         string(defaultValue: '/etc/ssl/pialab.crt', description: '', name: 'BackSSLCertificateFile')
         string(defaultValue: '/etc/ssl/pialab.key', description: '', name: 'BackSSLCertificateKeyFile')
-        string(defaultValue: '/etc/ssl/pialab.pem', description: '', name: 'BackSSLCertificateChainFile')
 
         string(defaultValue: '/usr/share/pialab/dist', description: '', name: 'FrontDirectory')
 
         string(defaultValue: '/etc/ssl/pialab.crt', description: '', name: 'FrontSSLCertificateFile')
         string(defaultValue: '/etc/ssl/pialab.key', description: '', name: 'FrontSSLCertificateKeyFile')
-        string(defaultValue: '/etc/ssl/pialab.pem', description: '', name: 'FrontSSLCertificateChainFile')
 
         string(defaultValue: 'test', description: '', name: 'BuildEnv')
 
@@ -63,11 +61,11 @@ pipeline {
                 build job: "PiaLab/pialab-back/${params.BackGitBranch}",  parameters: [
                     string(value: "${params.GlobalName}-${env.BuildTag}-back",  name: 'GlobalName'),
                     string(value: "${params.FrontUrl}", name: 'FrontUrl'),
+                    string(value: "${params.BackUrl}", name: 'BackUrl'),
 
                     string(value: "${params.BackDirectory}", name: 'BackDirectory'),
                     string(value: "${params.BackSSLCertificateFile}", name: 'BackSSLCertificateFile'),
                     string(value: "${params.BackSSLCertificateKeyFile}", name: 'BackSSLCertificateKeyFile'),
-                    string(value: "${params.BackSSLCertificateChainFile}", name: 'BackSSLCertificateChainFile'),
 
                     string(value: "${params.DatabaseName}", name: 'DatabaseName'),
                     string(value: "${params.DatabaseUser}", name: 'DatabaseUser'),
@@ -99,7 +97,6 @@ pipeline {
                     string(value: "${params.FrontDirectory}", name: 'FrontDirectory'),
                     string(value: "${params.FrontSSLCertificateFile}", name: 'FrontSSLCertificateFile'),
                     string(value: "${params.FrontSSLCertificateKeyFile}", name: 'FrontSSLCertificateKeyFile'),
-                    string(value: "${params.FrontSSLCertificateChainFile}", name: 'FrontSSLCertificateChainFile'),
 
                     string(value: "${params.BuildEnv}", name: 'BuildEnv'),
                     string(value: "${env.ClientId}", name: 'ClientId'),
