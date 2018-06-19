@@ -92,6 +92,7 @@ pipeline {
             steps {
                 build job: "PiaLab/pialab/${params.FrontGitBranch}",  parameters: [
                     string(value: "${params.GlobalName}-${env.BuildTag}-front",  name: 'GlobalName'),
+                    string(value: "${params.FrontUrl}", name: 'FrontUrl'),
                     string(value: "${params.BackUrl}", name: 'BackUrl'),
 
                     string(value: "${params.FrontDirectory}", name: 'FrontDirectory'),
