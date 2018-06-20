@@ -56,6 +56,14 @@ pipeline {
     }
 
     stages {
+        stage ('Set Name and Description') {
+            steps {
+                script {
+                    currentBuild.displayName = "#${BUILD_NUMBER} ${params.GlobalName} ${params.BuildEnv}"
+                }
+            }
+        }
+
         stage ('Create Back Archive') {
             steps {
                 build job: "PiaLab/pialab-back/${params.BackGitBranch}",  parameters: [
