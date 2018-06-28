@@ -91,7 +91,7 @@ pipeline {
                     string(value: "${env.ClientSecret}", name: 'ClientSecret'),
                     string(value: 'false', name: 'RunTest'),
                     string(value: 'private', name: 'Repo'),
-                    string(value: 'Pialab/release/${params.GlobalName}', name: 'Project')
+                    string(value: "Pialab/release/${params.GlobalName}", name: 'Project')
                 ], wait: true
             }
 
@@ -113,7 +113,7 @@ pipeline {
                     string(value: "${env.ClientSecret}", name: 'ClientSecret'),
                     string(value: 'false', name: 'RunTest'),
                     string(value: 'private', name: 'Repo'),
-                    string(value: 'Pialab/release/${params.GlobalName}', name: 'Project')
+                    string(value: "Pialab/release/${params.GlobalName}", name: 'Project')
                 ], wait: true
             }
 
