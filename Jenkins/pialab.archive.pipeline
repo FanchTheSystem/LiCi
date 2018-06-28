@@ -65,9 +65,15 @@ pipeline {
         }
 
         stage ('Create Back Archive') {
+            environment {
+                PROJECT = "Pialab/release/${params.GlobalName}/${params.BackGitBranch}"
+                ARCHIVE_NAME = "${params.GlobalName}-${env.BuildTag}-back"
+                ARCHIVE_NAME_LATEST = "${params.GlobalName}-latest-back"
+                REPO = "private"
+            }
             steps {
                 build job: "PiaLab/pialab-back/${params.BackGitBranch}",  parameters: [
-                    string(value: "${params.GlobalName}-${env.BuildTag}-back",  name: 'GlobalName'),
+                    string(value: "${ARCHIVE_NAME}",  name: 'GlobalName'),
                     string(value: "${params.FrontUrl}", name: 'FrontUrl'),
                     string(value: "${params.BackUrl}", name: 'BackUrl'),
 
@@ -85,22 +91,31 @@ pipeline {
 
                     string(value: "${params.MailerUrl}", name: 'MailerUrl'),
 
-
                     string(value: "${params.BuildEnv}", name: 'BuildEnv'),
                     string(value: "${env.ClientId}", name: 'ClientId'),
                     string(value: "${env.ClientSecret}", name: 'ClientSecret'),
                     string(value: 'false', name: 'RunTest'),
-                    string(value: 'private', name: 'Repo'),
-                    string(value: "Pialab/release/${params.GlobalName}", name: 'Project')
+                    string(value: "${REPO}", name: 'Repo'),
+                    string(value: "${PROJECT}", name: 'Project')
                 ], wait: true
+                
+                sh "ln -sf ${LIREPOPATH}/${REPO}/${PROJECT}/${ARCHIVE_NAME}_${params.BackGitBranch}.tar.gz ${LIREPOPATH}/${REPO}/${PROJECT}/${ARCHIVE_NAME_LATEST}_${params.BackGitBranch}.tar.gz"
+                sh "ln -sf ${LIREPOPATH}/${REPO}/${PROJECT}/${ARCHIVE_NAME}_${params.BackGitBranch}.tar.gz.sha256.txt ${LIREPOPATH}/${REPO}/${PROJECT}/${ARCHIVE_NAME_LATEST}_${params.BackGitBranch}.tar.gz.sha256.txt"
+            
             }
 
         }
 
         stage ('Create Front Archive') {
+            environment {
+                PROJECT = "Pialab/release/${params.GlobalName}/${params.FrontGitBranch}"
+                ARCHIVE_NAME = "${params.GlobalName}-${env.BuildTag}-front"
+                ARCHIVE_NAME_LATEST = "${params.GlobalName}-latest-front"
+                REPO = "private"
+            }
             steps {
                 build job: "PiaLab/pialab/${params.FrontGitBranch}",  parameters: [
-                    string(value: "${params.GlobalName}-${env.BuildTag}-front",  name: 'GlobalName'),
+                    string(value: "${ARCHIVE_NAME}",  name: 'GlobalName'),
                     string(value: "${params.FrontUrl}", name: 'FrontUrl'),
                     string(value: "${params.BackUrl}", name: 'BackUrl'),
 
@@ -112,9 +127,13 @@ pipeline {
                     string(value: "${env.ClientId}", name: 'ClientId'),
                     string(value: "${env.ClientSecret}", name: 'ClientSecret'),
                     string(value: 'false', name: 'RunTest'),
-                    string(value: 'private', name: 'Repo'),
-                    string(value: "Pialab/release/${params.GlobalName}", name: 'Project')
+                    string(value: "${REPO}", name: 'Repo'),
+                    string(value: "${PROJECT}", name: 'Project')
                 ], wait: true
+                
+                sh "ln -sf ${LIREPOPATH}/${REPO}/${PROJECT}/${ARCHIVE_NAME}_${params.FrontGitBranch}.tar.gz ${LIREPOPATH}/${REPO}/${PROJECT}/${ARCHIVE_NAME_LATEST}_${params.FrontGitBranch}.tar.gz"
+                sh "ln -sf ${LIREPOPATH}/${REPO}/${PROJECT}/${ARCHIVE_NAME}_${params.FrontGitBranch}.tar.gz.sha256.txt ${LIREPOPATH}/${REPO}/${PROJECT}/${ARCHIVE_NAME_LATEST}_${params.FrontGitBranch}.tar.gz.sha256.txt"
+            
             }
 
         }
